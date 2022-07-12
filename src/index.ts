@@ -51,11 +51,13 @@ client.on('messageCreate', async message => {
         for (let i = 0; i < contents.length; i++) {
             let content = contents[i];
             if (isValidUrl(content)) {
-                let type = (await fetch(content, { method: 'HEAD' })).headers.get('content-type');
-                if (content.startsWith('https://tenor.com/view/')) checks.push(true);
-                else if (type.startsWith('video/')) checks.push(true);
-                else if (type.startsWith('image/')) checks.push(true);
-                else checks.push(false);
+                fetch(content, { method: 'HEAD' }).then(data => {
+                    let type = data.headers.get('content-type');
+                    if (content.startsWith('https://tenor.com/view/')) checks.push(true);
+                    else if (type.startsWith('video/')) checks.push(true);
+                    else if (type.startsWith('image/')) checks.push(true);
+                    else checks.push(false);
+                }).catch(e => console.log(e))
             };
         }
         if (checks.includes(false)) return deleteMessage(message, channel, 5);
@@ -71,7 +73,13 @@ function finish(message: Message<boolean>) {
     }
 }
 function deleteMessage(message: Message<boolean>, channel: any, minutes: number) {
-    message.delete().then(() => { channel.send('[Message Deleted]').then(message => { setTimeout(() => { message.delete() }, minutes * 60000) }) });
+    message.delete().then(() => {
+        channel.send('[Message Deleted]').then((message: Message<boolean>) => {
+            setTimeout(() => {
+                message.delete().catch(e => { console.log('error deleting delete message:', e) });
+            }, minutes * 60000);
+        });
+    }).catch(e => { console.log('error deleting message:', e) });
 }
 
 client.login(process.env.BETATOKEN);
