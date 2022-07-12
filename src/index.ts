@@ -9,21 +9,21 @@ const client = new Client(
 );
 //testing            memes
 //995368611822706708 960560813637255189
-const target = '995368611822706708';
+const target = '960560813637255189';
 const emojis = [
     //Production Emojis
-    // "<:kafeheart:973325129914396712>",
-    // "<:cocsmile:960630832219971624>",
-    // "<:choowo:960614566121865277>",
-    // "<:vanpain:960600793789108304>",
-    // "<:cindizzy:960630695464669214>",
-    // "<:mapmad:960614761349935134>",
-    // "<:azustare:960630527356977212>", 
-    // "<:shicool:960662630723375114>"
+    "<:kafeheart:973325129914396712>",
+    "<:cocsmile:960630832219971624>",
+    "<:choowo:960614566121865277>",
+    "<:vanpain:960600793789108304>",
+    "<:cindizzy:960630695464669214>",
+    "<:mapmad:960614761349935134>",
+    "<:azustare:960630527356977212>", 
+    "<:shicool:960662630723375114>"
 
     //Testing Emojis
-    "<:a_:996202740202090557>",
-    "<:b_:996202722699264000>"
+    // "<:a_:996202740202090557>",
+    // "<:b_:996202722699264000>"
 ]
 
 client.on('ready', () => {
@@ -82,4 +82,4 @@ function deleteMessage(message: Message<boolean>, channel: any, minutes: number)
     }).catch(e => { console.log('error deleting message:', e) });
 }
 
-client.login(process.env.BETATOKEN);
+client.login(process.env.TOKEN);
