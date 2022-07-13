@@ -1,4 +1,4 @@
-import { Client, Message } from 'discord.js';
+import { Client, DMChannel, Message, NewsChannel, PartialDMChannel, PrivateThreadChannel, PublicThreadChannel, TextChannel, VoiceChannel } from 'discord.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,21 +9,21 @@ const client = new Client(
 );
 //testing            memes
 //995368611822706708 960560813637255189
-const target = '960560813637255189';
-const emojis = [
+const target: string = '995368611822706708';
+const emojis: Array<string> = [
     //Production Emojis
-    "<:kafeheart:973325129914396712>",
-    "<:cocsmile:960630832219971624>",
-    "<:choowo:960614566121865277>",
-    "<:vanpain:960600793789108304>",
-    "<:cindizzy:960630695464669214>",
-    "<:mapmad:960614761349935134>",
-    "<:azustare:960630527356977212>", 
-    "<:shicool:960662630723375114>"
+    // "<:kafeheart:973325129914396712>",
+    // "<:cocsmile:960630832219971624>",
+    // "<:choowo:960614566121865277>",
+    // "<:vanpain:960600793789108304>",
+    // "<:cindizzy:960630695464669214>",
+    // "<:mapmad:960614761349935134>",
+    // "<:azustare:960630527356977212>",
+    // "<:shicool:960662630723375114>"
 
     //Testing Emojis
-    // "<:a_:996202740202090557>",
-    // "<:b_:996202722699264000>"
+    "<:a_:996202740202090557>",
+    "<:b_:996202722699264000>"
 ]
 
 client.on('ready', () => {
@@ -72,9 +72,10 @@ function finish(message: Message<boolean>) {
         message.react(emoji).catch(e => { console.log('error reacting to message:', e) });
     }
 }
-function deleteMessage(message: Message<boolean>, channel: any, minutes: number) {
+function deleteMessage(message: Message<boolean>, channel: Channel, minutes: number) {
+    const messages: Array<string> = ["Nyuuu~ no tyext in the meme channel~! >w<", "Bakaa customer~, read the channel descwiption~! >w>", "Nyaaa~! Memes only means memes onlyy~ >w>"];
     message.delete().then(() => {
-        channel.send('[Message Deleted]').then((message: Message<boolean>) => {
+        channel.send(messages[Math.floor(Math.random() * (messages.length))]).then((message: Message<boolean>) => {
             setTimeout(() => {
                 message.delete().catch(e => { console.log('error deleting delete message:', e) });
             }, minutes * 60000);
@@ -82,4 +83,6 @@ function deleteMessage(message: Message<boolean>, channel: any, minutes: number)
     }).catch(e => { console.log('error deleting message:', e) });
 }
 
-client.login(process.env.TOKEN);
+client.login(process.env.BETATOKEN);
+
+declare type Channel = DMChannel | PartialDMChannel | NewsChannel | TextChannel | PublicThreadChannel | PrivateThreadChannel | VoiceChannel;
