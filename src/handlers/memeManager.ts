@@ -6,9 +6,10 @@ const channels: Array<string> = ['960560813637255189', '995368611822706708'];
 export default (message: Message<boolean>, channel: Channel) => {
 	if (!channels.includes(message.channelId)) return;
 	if (message.content.includes('\\')) deleteMessage(message, channel, 5);
+	if (message.stickers.size > 1) deleteMessage(message, channel, 5);
 	if (message.attachments.size > 0) {
 		let checks: Array<boolean> = [];
-		for (const [string, attachment] of message.attachments) {
+		for (const [s, attachment] of message.attachments) {
 			if (attachment.contentType.startsWith('image/') || attachment.contentType.startsWith('video/')) checks.push(true);
 			else checks.push(false);
 		}
@@ -18,8 +19,7 @@ export default (message: Message<boolean>, channel: Channel) => {
 	if (message.content) {
 		let contents = message.content.split(' ');
 		let checks: Array<boolean> = [];
-		for (let i = 0; i < contents.length; i++) {
-			let content = contents[i];
+		for (const content of contents) {
 			if (isValidUrl(content)) {
 				fetch(content, { method: 'HEAD' })
 					.then((data) => {
@@ -73,12 +73,22 @@ function deleteMessage(message: Message<boolean>, channel: Channel, minutes: num
 				setTimeout(() => {
 					message.delete().catch((e) => {
 						console.log('error deleting delete message:', e);
+						setTimeout(() => {
+							message.delete().catch((e) => {
+								console.log('error deleting delete message:', e);
+							});
+						}, 10000);
 					});
 				}, minutes * 60000);
 			});
 		})
 		.catch((e) => {
 			console.log('error deleting message:', e);
+			setTimeout(() => {
+				message.delete().catch((e) => {
+					console.log('error deleting message:', e);
+				});
+			}, 10000);
 		});
 }
 
