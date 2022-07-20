@@ -9,10 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.0.0-dev.1657325401-33ae7df",
+    "discord.js": "^14.0.1",
     "dotenv": "^16.0.1"
   },
   "devDependencies": {
+    "tslib": "^2.4.0",
     "typescript": "^4.7.4"
   }
 }

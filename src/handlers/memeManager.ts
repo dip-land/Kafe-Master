@@ -3,45 +3,34 @@ import { DMChannel, Message, NewsChannel, PartialDMChannel, PrivateThreadChannel
 //                               memes                 testing
 const channels: Array<string> = ['960560813637255189', '995368611822706708'];
 
-export default (message: Message<boolean>, channel: Channel) => {
+export default async (message: Message<boolean>, channel: Channel) => {
 	if (!channels.includes(message.channelId)) return;
 	if (message.content.includes('\\')) deleteMessage(message, channel, 5);
-	if (message.stickers.size > 1) deleteMessage(message, channel, 5);
+	if (message.stickers.size > 0) deleteMessage(message, channel, 5);
 	if (message.attachments.size > 0) {
-		let checks: Array<boolean> = [];
+		let checks: Array<number> = [];
 		for (const [s, attachment] of message.attachments) {
-			if (attachment.contentType.startsWith('image/') || attachment.contentType.startsWith('video/')) checks.push(true);
-			else checks.push(false);
+			if (attachment.contentType.match(/video\/|image\//g)) checks.push(1);
+			else checks.push(0);
 		}
-		if (checks.includes(false)) return deleteMessage(message, channel, 5);
+		if (checks.includes(0)) return deleteMessage(message, channel, 5);
 		else return finish(message);
 	}
 	if (message.content) {
 		let contents = message.content.split(' ');
-		let checks: Array<boolean> = [];
+		let checks: Array<number> = [];
 		for (const content of contents) {
-			if (isValidUrl(content)) {
-				fetch(content, { method: 'HEAD' })
-					.then((data) => {
-						let type = data.headers.get('content-type');
-						if (content.startsWith('https://tenor.com/view/') || type.startsWith('video/') || type.startsWith('image/')) checks.push(true);
-						else checks.push(false);
-					})
-					.catch((e) => console.log(e));
+			let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
+			if (data) {
+				let type = data.headers.get('content-type');
+				if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || type.match(/video\/|image\//g)) checks.push(1);
+				else checks.push(0);
 			}
 		}
-		if (checks.includes(false) || (message.attachments.size === 0 && !message.content.includes('http'))) return deleteMessage(message, channel, 5);
+		if (checks.includes(0)) return deleteMessage(message, channel, 5);
 		else return finish(message);
 	}
 };
-
-function isValidUrl(url: string) {
-	try {
-		return Boolean(new URL(url));
-	} catch (e) {
-		return false;
-	}
-}
 
 function finish(message: Message<boolean>) {
 	const emojis =
@@ -58,9 +47,7 @@ function finish(message: Message<boolean>) {
 					'<:shicool:960662630723375114>',
 			  ];
 	for (const emoji of emojis) {
-		message.react(emoji).catch((e) => {
-			console.log('error reacting to message:', e);
-		});
+		message.react(emoji).catch((e) => console.log('error reacting to message:', e));
 	}
 }
 
@@ -69,12 +56,12 @@ function deleteMessage(message: Message<boolean>, channel: Channel, minutes: num
 	message
 		.delete()
 		.then(() => {
-			channel.send(messages[Math.floor(Math.random() * messages.length)]).then((message: Message<boolean>) => {
+			channel.send(messages[Math.floor(Math.random() * messages.length)]).then((deleteMessage: Message<boolean>) => {
 				setTimeout(() => {
-					message.delete().catch((e) => {
+					deleteMessage.delete().catch((e) => {
 						console.log('error deleting delete message:', e);
 						setTimeout(() => {
-							message.delete().catch((e) => {
+							deleteMessage.delete().catch((e) => {
 								console.log('error deleting delete message:', e);
 							});
 						}, 10000);

@@ -4,6 +4,9 @@ import messageCreate from './events/messageCreate';
 import os from 'os';
 dotenv.config();
 
+//sets the bot's priority higher than anything else on my server
+os.setPriority(-20);
+
 export const client = new Client({
 	intents: ['Guilds', 'GuildMessages', 'MessageContent'],
 });
