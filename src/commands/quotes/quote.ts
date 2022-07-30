@@ -20,10 +20,14 @@ export const extendedData = {
 };
 
 export default async (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	let keyword = options.find((option) => option.name === 'keyword')?.value;
-	let quotes = await Quote.findAll({ where: { keyword: keyword } });
-	let chosen = quotes[Math.floor(Math.random() * quotes.length)];
-	interaction.editReply(chosen?.text || 'This keyword has no quotes, sempai~');
+	try {
+		let keyword = options.find((option) => option.name === 'keyword')?.value;
+		let quotes = await Quote.findAll({ where: { keyword: keyword } });
+		let chosen = quotes[Math.floor(Math.random() * quotes.length)];
+		interaction.editReply(chosen?.text || 'This keyword has no quotes, sempai~');
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 export async function legacy(message: Message, args: Array<string>) {

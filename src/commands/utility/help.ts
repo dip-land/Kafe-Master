@@ -23,70 +23,74 @@ export const extendedData = {
 };
 
 export default (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	let query = options.find((option) => option.name === 'query')?.value;
-	let title: string;
-	const description: Array<string> = [];
-	for (const [name, command] of interaction.client.legacyCommands) {
-		if (command.extendedData.category === query && !command.extendedData?.aliases?.includes(name)) {
-			title = `${query[0].toUpperCase() + query.slice(1)} Commands`;
-			description.push(`**${name}** - ${command.data.description}`);
-		} else if (query === name) {
-			title = `${query[0].toUpperCase() + query.slice(1)} Command`;
-			description.push(
-				`**Name:** ${command.data.name}\n**Description:** ${command.data.description}\n**Aliases:** ${
-					command.extendedData.aliases?.length > 0 ? command.extendedData.aliases.join(', ') : 'none'
-				}\n**Category:** ${command.extendedData.category}\n**Cooldown:** ${command.extendedData.cooldown ? command.extendedData.cooldown : 2.5} second(s)`
-			);
-		} else if (!query) {
-			description.push(`**${command.extendedData.category}**`);
+	try {
+		let query = options.find((option) => option.name === 'query')?.value;
+		let title: string;
+		const description: Array<string> = [];
+		for (const [name, command] of interaction.client.legacyCommands) {
+			if (command.extendedData.category === query && !command.extendedData?.aliases?.includes(name)) {
+				title = `${query[0].toUpperCase() + query.slice(1)} Commands`;
+				description.push(`**${name}** - ${command.data.description}`);
+			} else if (query === name) {
+				title = `${query[0].toUpperCase() + query.slice(1)} Command`;
+				description.push(
+					`**Name:** ${command.data.name}\n**Description:** ${command.data.description}\n**Aliases:** ${
+						command.extendedData.aliases?.length > 0 ? command.extendedData.aliases.join(', ') : 'none'
+					}\n**Category:** ${command.extendedData.category}\n**Cooldown:** ${command.extendedData.cooldown ? command.extendedData.cooldown : 2.5} second(s)`
+				);
+			} else if (!query) {
+				description.push(`**${command.extendedData.category}**`);
+			}
 		}
-	}
-	if (!query) {
-		return interaction.editReply({
-			embeds: [
-				{
-					color: 0xfab6ec,
-					title: `Avaliable Command Categories`,
-					description: [...new Set(description)].join('\n'),
-					timestamp: new Date().toISOString(),
-					footer: {
-						text: `Requested by ${interaction.user.tag}`,
-						icon_url: interaction.user.displayAvatarURL(),
+		if (!query) {
+			return interaction.editReply({
+				embeds: [
+					{
+						color: 0xfab6ec,
+						title: `Avaliable Command Categories`,
+						description: [...new Set(description)].join('\n'),
+						timestamp: new Date().toISOString(),
+						footer: {
+							text: `Requested by ${interaction.user.tag}`,
+							icon_url: interaction.user.displayAvatarURL(),
+						},
 					},
-				},
-			],
-		});
-	}
-	if (title && description[0]) {
-		return interaction.editReply({
-			embeds: [
-				{
-					color: 0xfab6ec,
-					title: title,
-					description: description.join('\n'),
-					timestamp: new Date().toISOString(),
-					footer: {
-						text: `Requested by ${interaction.user.tag}`,
-						icon_url: interaction.user.displayAvatarURL(),
+				],
+			});
+		}
+		if (title && description[0]) {
+			return interaction.editReply({
+				embeds: [
+					{
+						color: 0xfab6ec,
+						title: title,
+						description: description.join('\n'),
+						timestamp: new Date().toISOString(),
+						footer: {
+							text: `Requested by ${interaction.user.tag}`,
+							icon_url: interaction.user.displayAvatarURL(),
+						},
 					},
-				},
-			],
-		});
-	} else {
-		return interaction.editReply({
-			embeds: [
-				{
-					color: 0xfab6ec,
-					title: `Category or Command Error`,
-					description: `The category or command \`${query}\` does not exist, or there was an error with this command.`,
-					timestamp: new Date().toISOString(),
-					footer: {
-						text: `Requested by ${interaction.user.tag}`,
-						icon_url: interaction.user.displayAvatarURL(),
+				],
+			});
+		} else {
+			return interaction.editReply({
+				embeds: [
+					{
+						color: 0xfab6ec,
+						title: `Category or Command Error`,
+						description: `The category or command \`${query}\` does not exist, or there was an error with this command.`,
+						timestamp: new Date().toISOString(),
+						footer: {
+							text: `Requested by ${interaction.user.tag}`,
+							icon_url: interaction.user.displayAvatarURL(),
+						},
 					},
-				},
-			],
-		});
+				],
+			});
+		}
+	} catch (error) {
+		console.log(error);
 	}
 };
 
