@@ -27,11 +27,15 @@ export const extendedData = {
 };
 
 export default (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	let keyword = options.find((option) => option.name === 'keyword')?.value;
-	let text = options.find((option) => option.name === 'text')?.value;
-	new Quote({ keyword: keyword, text: text, createdBy: interaction.user.id }).save().then((q) => {
-		interaction.editReply(`Quote #${q.id} cweated :3`);
-	});
+	try {
+		let keyword = options.find((option) => option.name === 'keyword')?.value;
+		let text = options.find((option) => option.name === 'text')?.value;
+		new Quote({ keyword: keyword, text: text, createdBy: interaction.user.id }).save().then((q) => {
+			interaction.editReply(`Quote #${q.id} cweated :3`);
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 export async function legacy(message: Message, args: Array<string>) {

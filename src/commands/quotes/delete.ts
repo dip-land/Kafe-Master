@@ -21,46 +21,50 @@ export const extendedData = {
 };
 
 export default async (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	let id = options.find((option) => option.name === 'id')?.value;
-	let quote = await Quote.findOne({ where: { id } });
-	if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
-	let createdBy = await interaction.client.users.fetch(quote.createdBy);
-	if (interaction.memberPermissions.has('Administrator') || interaction.user.id !== createdBy.id) return;
-	interaction.editReply({
-		embeds: [
-			{
-				color: 0xfab6ec,
-				title: `Do you wanna compost this quote, myaa?`,
-				description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
-					quote.createdAt.getTime() / 1000
-				)}:F>\n`,
-				timestamp: new Date().toISOString(),
-				footer: {
-					text: `Requested by ${interaction.user.tag}`,
-					icon_url: interaction.user.displayAvatarURL(),
+	try {
+		let id = options.find((option) => option.name === 'id')?.value;
+		let quote = await Quote.findOne({ where: { id } });
+		if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
+		let createdBy = await interaction.client.users.fetch(quote.createdBy);
+		if (interaction.memberPermissions.has('Administrator') || interaction.user.id !== createdBy.id) return;
+		interaction.editReply({
+			embeds: [
+				{
+					color: 0xfab6ec,
+					title: `Do you wanna compost this quote, myaa?`,
+					description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
+						quote.createdAt.getTime() / 1000
+					)}:F>\n`,
+					timestamp: new Date().toISOString(),
+					footer: {
+						text: `Requested by ${interaction.user.tag}`,
+						icon_url: interaction.user.displayAvatarURL(),
+					},
 				},
-			},
-		],
-		components: [
-			{
-				type: 1,
-				components: [
-					{
-						type: 2,
-						customId: `${interaction.user.id}_qd_${quote.id}_${interaction.id}`,
-						label: 'Yes',
-						style: 4,
-					},
-					{
-						type: 2,
-						customId: `${interaction.user.id}_cancel_${interaction.id}`,
-						label: 'No',
-						style: 2,
-					},
-				],
-			},
-		],
-	});
+			],
+			components: [
+				{
+					type: 1,
+					components: [
+						{
+							type: 2,
+							customId: `${interaction.user.id}_qd_${quote.id}_${interaction.id}`,
+							label: 'Yes',
+							style: 4,
+						},
+						{
+							type: 2,
+							customId: `${interaction.user.id}_cancel_${interaction.id}`,
+							label: 'No',
+							style: 2,
+						},
+					],
+				},
+			],
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 export async function legacy(message: Message, args: Array<string>, client: Client<boolean>) {
