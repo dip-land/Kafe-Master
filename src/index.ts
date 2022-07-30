@@ -44,14 +44,9 @@ glob('./dist/events/**/*.js', (err: Error, paths: Array<string>) => {
 	}
 });
 
-if (beta) {
-	client.login(process.env.BETATOKEN);
-	client.rest = new REST({ version: '10' }).setToken(process.env.BETATOKEN);
-} else {
-	client.login(process.env.TOKEN);
-	//client.rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-	os.setPriority(-20);
-}
+client.login(beta ? process.env.BETATOKEN : process.env.TOKEN);
+client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN : process.env.TOKEN);
+if (!beta) os.setPriority(-20);
 
 //types
 declare module 'discord.js' {
