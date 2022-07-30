@@ -27,7 +27,7 @@ export default async (message: Message<boolean>, channel: Channel) => {
 				else checks.push(0);
 			}
 		}
-		if (checks.includes(0)) return deleteMessage(message, channel, 5);
+		if (checks.includes(0) || checks.length === 0) return deleteMessage(message, channel, 5);
 		else return finish(message);
 	}
 };
@@ -36,16 +36,7 @@ function finish(message: Message<boolean>) {
 	const emojis =
 		message.channelId === channels[1]
 			? ['<:a_:996202740202090557>', '<:b_:996202722699264000>']
-			: [
-					'<:kafeheart:973325129914396712>',
-					'<:cocsmile:960630832219971624>',
-					'<:choowo:960614566121865277>',
-					'<:vanpain:960600793789108304>',
-					'<:cindizzy:960630695464669214>',
-					'<:mapmad:960614761349935134>',
-					'<:azustare:960630527356977212>',
-					'<:shicool:960662630723375114>',
-			  ];
+			: ['<:kafeheart:973325129914396712>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'];
 	for (const emoji of emojis) {
 		message.react(emoji).catch((e) => console.log('error reacting to message:', e));
 	}
