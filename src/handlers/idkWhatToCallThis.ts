@@ -12,7 +12,6 @@ const channels: Array<string> = [
 	'821055344566468689',
 	'819703387351285790',
 	'861372174664073226',
-	'870773421049516122',
 	'821061080621121596',
 ];
 const maxMessagesBeforeTrigger = 8;
@@ -20,6 +19,7 @@ const maxMessagesBeforeTrigger = 8;
 export default async (message: Message<boolean>) => {
 	if (!channels.includes(message.channelId)) return;
 	if (message.channel.type !== 0) return;
+	if (!message?.id) return;
 	const massageParlor = message.channel.parentId === '683772220467838995';
 	const counter = (await Counter.findOrCreate({ where: { id: message.channelId } }))[0];
 	if (message.attachments.size > 0) {
@@ -51,10 +51,18 @@ export default async (message: Message<boolean>) => {
 			counter.save();
 			if (counter.count >= maxMessagesBeforeTrigger) {
 				const sendMessage = massageParlor ? "❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!" : "❕>w< w-where's the cute~?? Post more cute~!";
-				message.channel.send(sendMessage).then(msg => {
+				message.channel.send(sendMessage).then((msg) => {
 					setTimeout(() => {
-						msg.delete().catch((e) => console.log(e))
-					}, 30000)
+						msg.delete().catch((e) =>
+							setTimeout(() => {
+								msg.delete().catch((e) =>
+									setTimeout(() => {
+										msg.delete().catch((e) => console.log(e));
+									}, 60000 * 2)
+								);
+							}, 60000)
+						);
+					}, 30000);
 				});
 			}
 		}
@@ -63,6 +71,7 @@ export default async (message: Message<boolean>) => {
 
 function finish(message: Message<boolean>, massageParlor: boolean, counter: Counter) {
 	if (message.channel.type !== 0) return;
+	if (!message?.id) return;
 	counter.count = 0;
 	counter.save();
 	const emoji = massageParlor ? '<:lewdheart:1001948634859974746>' : '<:kafeheart:973325129914396712>';
