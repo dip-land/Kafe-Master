@@ -50,8 +50,13 @@ export default async (message: Message<boolean>) => {
 			counter.count++;
 			counter.save();
 			if (counter.count >= maxMessagesBeforeTrigger) {
+				message.delete().catch((e) => console.log(e));
 				const sendMessage = massageParlor ? "❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!" : "❕>w< w-where's the cute~?? Post more cute~!";
-				message.channel.send(sendMessage);
+				message.channel.send(sendMessage).then(msg => {
+					setTimeout(() => {
+						msg.delete().catch((e) => console.log(e))
+					}, 30000)
+				});
 			}
 		}
 	}
