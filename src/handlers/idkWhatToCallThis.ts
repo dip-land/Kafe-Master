@@ -54,7 +54,7 @@ export default async (message: Message<boolean>) => {
 				message.channel.send(sendMessage).then(msg => {
 					setTimeout(() => {
 						msg.delete().catch((e) => console.log(e))
-					}, 60000 * 2)
+					}, 30000)
 				});
 			}
 		}
