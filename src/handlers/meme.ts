@@ -23,7 +23,7 @@ export default async (message: Message<boolean>, channel: Channel) => {
 			let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 			if (data) {
 				let type = data.headers.get('content-type');
-				if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || type.match(/video\/|image\//g)) checks.push(1);
+				if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || type.match(/video\/|image\//g)) checks.push(1);
 				else checks.push(0);
 			}
 		}
