@@ -13,5 +13,6 @@ export default async (message: Message<boolean>) => {
 	let prefixes = beta ? ['.', '<@996196343120928859>'] : ['.', '<@995370187626905611>'];
 	let prefix = prefixes.find((p) => message.content.startsWith(p));
 	if (prefix === undefined) return;
+	if (!beta && message.guildId !== '632717913169854495') return;
 	commandHandler(message, prefix, message.client);
 };
