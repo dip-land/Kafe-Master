@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Counter } from './database';
 
-//my testing channel, tearoom, and all the channels in massage parlor
+//my testing channel, tearoom, and all the channels in massage parlor except basement
 const channels: Array<string> = [
 	'1002426028532174959',
 	'690972955080917085',
