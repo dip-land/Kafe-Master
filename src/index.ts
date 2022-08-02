@@ -1,4 +1,4 @@
-import { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message } from 'discord.js';
+import { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message, VoiceState } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import 'dotenv/config';
 import { glob } from 'glob';
@@ -7,7 +7,7 @@ import os from 'os';
 export const beta = os.release().includes('10.0');
 
 export const client = new Client({
-	intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers'],
+	intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers', 'GuildVoiceStates'],
 });
 client.cooldowns = new Collection();
 client.legacyCommands = new Collection();
@@ -53,6 +53,10 @@ declare module 'discord.js' {
 	interface Client {
 		cooldowns: Map<any, any>;
 		legacyCommands: Map<string, CommandFile>;
+	}
+
+	interface APIInteractionGuildMember {
+		voice: VoiceState;
 	}
 }
 
