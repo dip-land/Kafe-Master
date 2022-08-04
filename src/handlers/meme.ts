@@ -17,14 +17,18 @@ export default async (message: Message<boolean>, channel: Channel) => {
 		else return finish(message);
 	}
 	if (message.content) {
-		let contents = message.content.split(' ');
+		let contents = message.content.split(/[\n\r\s]+/);
 		let checks: Array<number> = [];
 		for (const content of contents) {
-			let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
-			if (data) {
-				let type = data.headers.get('content-type');
-				if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || type.match(/video\/|image\//g)) checks.push(1);
-				else checks.push(0);
+			if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)) {
+				checks.push(1);
+			} else {
+				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
+				if (data) {
+					let type = data.headers.get('content-type');
+					if (type.match(/video\/|image\/|webm/g)) checks.push(1);
+					else checks.push(0);
+				}
 			}
 		}
 		if (checks.includes(0) || checks.length === 0) return deleteMessage(message, channel, 5);
