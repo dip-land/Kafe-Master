@@ -1,6 +1,7 @@
 import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
 import { beta, client } from '../index';
+import { readFile, writeFile } from 'node:fs';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
 	logging: false,
@@ -39,7 +40,7 @@ Quote.afterDestroy('s', async (quote) => {
 	const channel = await client.channels.fetch(channelID).catch((e) => {});
 	let createdBy = await client.users.fetch(quote.createdBy);
 	if (channel && channel?.isTextBased()) {
-		channel.send({ content: `\`Quote #${quote.id} Deleted\` ${quote.text}\n\n<t:${Math.floor(Date.now()/ 1000)}:F>\nCreated by ${createdBy.tag} (${createdBy.id})` });
+		channel.send({ content: `\`Quote #${quote.id} Deleted\` ${quote.text}\n\n<t:${Math.floor(Date.now() / 1000)}:F>\nCreated by ${createdBy.tag} (${createdBy.id})` });
 	}
 });
 
@@ -127,3 +128,25 @@ export async function registerGuild(guild: Guild) {
 sequelize.afterCreate('', () => {
 	sequelize.sync({ alter: true });
 });
+
+sequelize.beforeSync('', () => {
+	readFile('./data/db.sqlite', (err, data) => {
+		if (err) console.log(err);
+		if (data)
+			writeFile(`./data/backups/db_${Date.now()}.sqlite`, data.toString(), (err) => {
+				if (err) console.log(err);
+				console.log(`Backup ${Date.now()} created.`);
+			});
+	});
+});
+
+setInterval(() => {
+	readFile('./data/db.sqlite', (err, data) => {
+		if (err) console.log(err);
+		if (data)
+			writeFile(`./data/backups/db_${Date.now()}.sqlite`, data.toString(), (err) => {
+				if (err) console.log(err);
+				console.log(`Backup ${Date.now()} created.`);
+			});
+	});
+}, 60 * 60000);
