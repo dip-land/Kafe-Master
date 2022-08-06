@@ -8,6 +8,12 @@ export const name = 'messageCreate';
 export const once = false;
 export default async (message: Message<boolean>) => {
 	if (message.author.bot) return;
+	if (message.member.displayName.toLowerCase().includes('mouse') && Math.ceil(Math.random() * 99) === 69)
+		message.channel.send('🧀').then((msg) =>
+			setTimeout(() => {
+				msg.delete();
+			}, 3000)
+		);
 	memeHandler(message, message.channel);
 	idkWhatToCallThisHandler(message);
 	let prefixes = beta ? ['.', '<@996196343120928859>'] : ['.', '<@995370187626905611>'];

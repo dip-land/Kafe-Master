@@ -34,7 +34,7 @@ export default async (message: Message<boolean>) => {
 		let contents = message.content.split(' ');
 		let checks: Array<number> = [];
 		for (const content of contents) {
-			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://cdn.discordapp.com/attachments/')) {
+			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://twitter.com/')) {
 				checks.push(1);
 			} else if (content.startsWith('http')) {
 				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});

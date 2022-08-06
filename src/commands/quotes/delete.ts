@@ -26,7 +26,7 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 		let quote = await Quote.findOne({ where: { id } });
 		if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
 		let createdBy = await interaction.client.users.fetch(quote.createdBy);
-		if (interaction.memberPermissions.has('Administrator') || interaction.user.id !== createdBy.id) return;
+		if (!interaction.memberPermissions.has('Administrator') || interaction.user.id !== createdBy.id) return;
 		interaction.editReply({
 			embeds: [
 				{
@@ -74,7 +74,7 @@ export async function legacy(message: Message, args: Array<string>, client: Clie
 	let quote = await Quote.findOne({ where: { id } });
 	if (!quote) return message.reply(`The quote #${id} jar is empty :3`);
 	let createdBy = await client.users.fetch(quote.createdBy);
-	if (message.member.permissions.has('Administrator') || message.author.id !== createdBy.id) return;
+	if (!message.member.permissions.has('Administrator') || message.author.id !== createdBy.id) return;
 	message.reply({
 		embeds: [
 			{
