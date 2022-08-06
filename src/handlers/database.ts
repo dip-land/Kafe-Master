@@ -34,6 +34,15 @@ Quote.afterCreate('s', async (quote) => {
 	}
 });
 
+Quote.afterDestroy('s', async (quote) => {
+	const channelID = beta ? '1002785897005199480' : '1004144428019097600';
+	const channel = await client.channels.fetch(channelID).catch((e) => {});
+	let createdBy = await client.users.fetch(quote.createdBy);
+	if (channel && channel?.isTextBased()) {
+		channel.send({ content: `\`Quote #${quote.id} Deleted\` ${quote.text}\n\n<t:${Math.floor(Date.now()/ 1000)}:F>\nCreated by ${createdBy.tag} (${createdBy.id})` });
+	}
+});
+
 //Couunters
 export class Counter extends Model {
 	declare id: string;
