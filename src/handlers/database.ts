@@ -1,7 +1,7 @@
 import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
 import { beta, client } from '../index';
-import { readFile, writeFile } from 'node:fs';
+import { existsSync, readdir, readFile, writeFile, unlinkSync } from 'node:fs';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
 	logging: false,
@@ -125,17 +125,27 @@ export async function registerGuild(guild: Guild) {
 	}
 }
 
-sequelize.afterCreate('', () => {
-	sequelize.sync({ alter: true });
-});
-
 sequelize.beforeSync('', () => {
 	readFile('./data/db.sqlite', (err, data) => {
 		if (err) console.log(err);
-		if (data)
-			writeFile(`./data/backups/db_${Date.now()}.sqlite`, data.toString(), (err) => {
+		if (data && !existsSync(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`))
+			writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (err) => {
 				if (err) console.log(err);
-				console.log(`Backup ${Date.now()} created.`);
+				console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
+				setTimeout(() => {
+					readFile('./data/imports/quotes.txt', (err, data) => {
+						if (data) {
+							let quotes = data.toString().split(/\r\n/);
+							for (const quote of quotes) {
+								let parsedQuote = quote.split('"');
+								try {
+									new Quote({ keyword: parsedQuote[0], text: parsedQuote[1], createdBy: parsedQuote[2] }).save();
+								} catch (error) {}
+							}
+							unlinkSync('./data/imports/quotes.txt');
+						}
+					});
+				}, 10000);
 			});
 	});
 });
@@ -144,9 +154,9 @@ setInterval(() => {
 	readFile('./data/db.sqlite', (err, data) => {
 		if (err) console.log(err);
 		if (data)
-			writeFile(`./data/backups/db_${Date.now()}.sqlite`, data.toString(), (err) => {
+			writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (err) => {
 				if (err) console.log(err);
-				console.log(`Backup ${Date.now()} created.`);
+				console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
 			});
 	});
 }, 60 * 60000);
