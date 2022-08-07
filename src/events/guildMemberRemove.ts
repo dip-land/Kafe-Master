@@ -4,7 +4,7 @@ import { client } from '../index';
 export const name = 'guildMemberRemove';
 export const once = false;
 export default async (member: GuildMember) => {
-	const channelID = member.guild.id === '632717913169854495' ? '820015458774024262' : '1003983050692116550';
+	const channelID = member.guild.id === '632717913169854495' ? '1005657796802519192' : '1003983050692116550';
 	const sendChannel = await client.channels.fetch(channelID);
 	if (sendChannel.type !== 0) return;
 	const created = Math.round(member.user.createdTimestamp / 1000);
