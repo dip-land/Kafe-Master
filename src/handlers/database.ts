@@ -1,7 +1,7 @@
 import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
 import { beta, client } from '../index';
-import { existsSync, readdir, readFile, writeFile, unlinkSync } from 'node:fs';
+import { existsSync, readFile, writeFile, unlinkSync } from 'node:fs';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
 	logging: false,
@@ -110,7 +110,7 @@ User.init(
 		},
 		money: {
 			type: DataTypes.INTEGER,
-			defaultValue: 1000,
+			defaultValue: 0,
 		},
 	},
 	{ sequelize, modelName: 'Users', timestamps: false }
@@ -126,37 +126,32 @@ export async function registerGuild(guild: Guild) {
 }
 
 sequelize.beforeSync('', () => {
-	readFile('./data/db.sqlite', (err, data) => {
-		if (err) console.log(err);
-		if (data && !existsSync(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`))
-			writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (err) => {
-				if (err) console.log(err);
-				console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
-				setTimeout(() => {
-					readFile('./data/imports/quotes.txt', (err, data) => {
-						if (data) {
-							let quotes = data.toString().split(/\r\n/);
-							for (const quote of quotes) {
-								let parsedQuote = quote.split('"');
-								try {
-									new Quote({ keyword: parsedQuote[0], text: parsedQuote[1], createdBy: parsedQuote[2] }).save();
-								} catch (error) {}
-							}
-							unlinkSync('./data/imports/quotes.txt');
-						}
-					});
-				}, 10000);
-			});
+	readFile('./data/db.sqlite', (error, data) => {
+		if (existsSync(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`) || error) return;
+		writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (error) => {
+			if (error) console.log(error);
+			console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
+			importData('quotes.txt', './data/imports/', true);
+			importData('counters.txt', './data/imports/', true);
+			importData('song_queues.txt', './data/imports/', true);
+			importData('users.txt', './data/imports/', true);
+		});
 	});
 });
 
-setInterval(() => {
-	readFile('./data/db.sqlite', (err, data) => {
-		if (err) console.log(err);
-		if (data)
-			writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (err) => {
-				if (err) console.log(err);
-				console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
-			});
+function importData(name: string, basePath: string, deleteImport: boolean) {
+	readFile(`${basePath}${name}`, (error, data) => {
+		if (!data || error) return;
+		let splitData = data.toString().split(/\r\n/);
+		for (const d of splitData) {
+			let data = d.split(':|:');
+			try {
+				if (name.includes('quotes')) new Quote({ keyword: data[0], text: data[1], createdBy: data[2] }).save();
+				else if (name.includes('counters')) new Counter({ id: data[0], count: data[1] }).save();
+				else if (name.includes('song_queues')) new Song({ id: data[0], platform: data[1], duration: data[2] }).save();
+				else if (name.includes('users')) new User({ id: data[0], xp: data[1], level: data[2], money: data[2] }).save();
+			} catch (error) {}
+		}
+		if (deleteImport) unlinkSync(`${basePath}${name}`);
 	});
-}, 60 * 60000);
+}
