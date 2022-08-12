@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import commandHandler from '../handlers/legacyCommand';
 import memeHandler from '../handlers/meme';
 import idkWhatToCallThisHandler from '../handlers/idkWhatToCallThis';
-import { beta } from '../index';
+import { beta } from '../';
 
 export const name = 'messageCreate';
 export const once = false;

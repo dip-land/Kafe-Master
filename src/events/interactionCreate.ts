@@ -6,7 +6,7 @@ import { Interaction } from 'discord.js';
 export const name = 'interactionCreate';
 export const once = false;
 export default (interaction: Interaction) => {
-	if(!interaction?.id) return;
+	if (!interaction?.id) return;
 	if (interaction?.isButton()) return button(interaction);
 	if (interaction?.isChatInputCommand()) return command(interaction);
 	if (interaction?.isSelectMenu()) return selectMenu(interaction);

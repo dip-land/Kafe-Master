@@ -5,10 +5,10 @@ export default async (interaction: SelectMenuInteraction) => {
 	let args = interaction.customId.split('_');
 	let cmd = args[1];
 	let msg = args[args.length - 1];
-    if (args[0] !== interaction.user.id) interaction.reply({ content: 'Only command initiator can use this select menu.', ephemeral: true });
+	if (args[0] !== interaction.user.id) interaction.reply({ content: 'Only command initiator can use this select menu.', ephemeral: true });
 	if (cmd === 'qs') {
-        interaction.deferUpdate();
-        let quote = await Quote.findOne({ where: { id: interaction.values[0] } });
+		interaction.deferUpdate();
+		let quote = await Quote.findOne({ where: { id: interaction.values[0] } });
 		let createdBy = await interaction.client.users.fetch(quote.createdBy);
 		interaction.message.edit({
 			embeds: [
