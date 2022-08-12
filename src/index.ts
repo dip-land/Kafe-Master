@@ -47,4 +47,7 @@ glob('./dist/events/**/*.js', (err: Error, paths: Array<string>) => {
 
 client.login(beta ? process.env.BETATOKEN : process.env.TOKEN);
 client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN : process.env.TOKEN);
-if (!beta) os.setPriority(-20);
+if (!beta) {
+	require('newrelic');
+	os.setPriority(-20);
+}
