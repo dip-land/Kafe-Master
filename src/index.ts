@@ -4,6 +4,7 @@ import 'dotenv/config';
 import { glob } from 'glob';
 import { CommandFile, EventFile } from './types';
 import os from 'os';
+require('newrelic');
 
 export const beta = os.release().includes('10.0');
 
