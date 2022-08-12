@@ -1,9 +1,10 @@
-import { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message, VoiceState } from 'discord.js';
+import { Client, Collection } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import 'dotenv/config';
 import { glob } from 'glob';
-
+import { CommandFile, EventFile } from './types';
 import os from 'os';
+
 export const beta = os.release().includes('10.0');
 
 export const client = new Client({
@@ -47,33 +48,3 @@ glob('./dist/events/**/*.js', (err: Error, paths: Array<string>) => {
 client.login(beta ? process.env.BETATOKEN : process.env.TOKEN);
 client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN : process.env.TOKEN);
 if (!beta) os.setPriority(-20);
-
-//types
-declare module 'discord.js' {
-	interface Client {
-		cooldowns: Map<any, any>;
-		legacyCommands: Map<string, CommandFile>;
-	}
-
-	interface APIInteractionGuildMember {
-		voice: VoiceState;
-	}
-}
-
-export type CommandFile = {
-	data: ChatInputApplicationCommandData;
-	extendedData: {
-		aliases?: Array<string>;
-		category: string;
-		cooldown?: number;
-		disabled?: boolean;
-	};
-	default: (interaction: CommandInteraction, options: readonly CommandInteractionOption<CacheType>[]) => void;
-	legacy: (message: Message, args: Array<string>, client?: Client) => void;
-};
-
-export type EventFile = {
-	name: string;
-	once: boolean;
-	default: (...args: Array<any>) => void;
-};

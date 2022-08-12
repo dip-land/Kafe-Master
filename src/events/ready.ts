@@ -1,5 +1,5 @@
 import { Client, Routes } from 'discord.js';
-import { beta, commands } from '../index';
+import { beta, commands } from '../';
 import { registerGuild } from '../handlers/database';
 
 export const name = 'ready';

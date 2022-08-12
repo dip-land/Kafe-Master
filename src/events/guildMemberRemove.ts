@@ -1,5 +1,5 @@
 import { GuildMember } from 'discord.js';
-import { client } from '../index';
+import { client } from '../';
 
 export const name = 'guildMemberRemove';
 export const once = false;

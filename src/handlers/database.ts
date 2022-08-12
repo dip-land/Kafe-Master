@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
-import { beta, client } from '../index';
+import { beta, client } from '../';
 import { existsSync, readFile, writeFile, unlinkSync } from 'node:fs';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
@@ -61,17 +61,15 @@ Counter.init(
 );
 
 //Song Queue
-export class Song extends Model {
+export class Queue extends Model {
 	declare id: string;
+	declare url: string;
 	declare platform: string;
 	declare duration: string;
 }
-Song.init(
+Queue.init(
 	{
-		id: {
-			type: DataTypes.STRING,
-			primaryKey: true,
-		},
+		url: DataTypes.STRING,
 		platform: DataTypes.STRING,
 		duration: DataTypes.STRING,
 	},
@@ -116,6 +114,7 @@ User.init(
 	{ sequelize, modelName: 'Users', timestamps: false }
 );
 export async function registerGuild(guild: Guild) {
+	await Queue.sync({ force: true });
 	await sequelize.sync({ alter: true });
 	const members = await guild.members.fetch();
 	for (const [memberID] of members) {
@@ -148,7 +147,7 @@ function importData(name: string, basePath: string, deleteImport: boolean) {
 			try {
 				if (name.includes('quotes')) new Quote({ keyword: data[0], text: data[1], createdBy: data[2] }).save();
 				else if (name.includes('counters')) new Counter({ id: data[0], count: data[1] }).save();
-				else if (name.includes('song_queues')) new Song({ id: data[0], platform: data[1], duration: data[2] }).save();
+				else if (name.includes('song_queues')) new Queue({ id: data[0], platform: data[1], duration: data[2] }).save();
 				else if (name.includes('users')) new User({ id: data[0], xp: data[1], level: data[2], money: data[2] }).save();
 			} catch (error) {}
 		}
