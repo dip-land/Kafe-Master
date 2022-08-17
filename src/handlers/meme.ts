@@ -40,7 +40,7 @@ function finish(message: Message<boolean>) {
 	const emojis =
 		message.channelId === channels[1]
 			? ['<:a_:996202740202090557>', '<:b_:996202722699264000>']
-			: ['<:kafeheart:973325129914396712>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'];
+			: ['<a:akafeheart:1009602965616726026>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'];
 	for (const emoji of emojis) {
 		message.react(emoji).catch((e) => console.log('error reacting to message:', e));
 	}

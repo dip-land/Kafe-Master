@@ -74,6 +74,6 @@ function finish(message: Message<boolean>, massageParlor: boolean, counter: Coun
 	if (!message?.id) return;
 	counter.count = 0;
 	counter.save();
-	const emoji = massageParlor ? '<:lewdheart:1001948634859974746>' : '<:kafeheart:973325129914396712>';
+	const emoji = massageParlor ? '<:lewdheart:1001948634859974746>' : '<a:akafeheart:1009602965616726026>';
 	message.react(emoji).catch((e) => console.log('error reacting to message:', e));
 }
