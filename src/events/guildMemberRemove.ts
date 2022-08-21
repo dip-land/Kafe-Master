@@ -13,14 +13,10 @@ export default async (member: GuildMember) => {
 		embeds: [
 			{
 				author: {
-					name: `${member.user.tag} (${member.user.id})`,
-					icon_url: member.user.displayAvatarURL(),
+					name: `${member.user.tag} (${member.id}) Left >~<`,
+					icon_url: member.displayAvatarURL(),
 				},
-				description: `• Username: <@${member.user.id}> - \`${member.user.tag}\` (${member.user.id})\n• Created: <t:${created}> (<t:${created}:R>)\n• Left: <t:${left}> (<t:${left}:R>)`,
-				footer: {
-					text: 'User Left',
-				},
-				timestamp: new Date(Date.now()).toISOString(),
+				description: `♡ Created: <t:${created}> (<t:${created}:R>)\n\n<t:${left}> (<t:${left}:R>)`,
 			},
 		],
 	});
