@@ -2,12 +2,18 @@ import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
 import { beta, client } from '../';
 import { existsSync, readFile, writeFile, unlinkSync } from 'node:fs';
-import io from '@pm2/io';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',
 	logging: false,
 	storage: './data/db.sqlite',
 });
+
+//Config
+export class Config extends Model {
+	declare id: string;
+	declare prefix: string;
+	
+}
 
 //Quotes
 export class Quote extends Model {
@@ -27,14 +33,6 @@ Quote.init(
 	{ sequelize, modelName: 'Quotes', timestamps: true }
 );
 
-const pm2QuoteCount = io.metric({
-	name: 'Quote Count',
-});
-
-Quote.count().then(count => {
-	pm2QuoteCount.set(count);
-})
-
 Quote.afterCreate('s', async (quote) => {
 	const channelID = beta ? '1002785897005199480' : '1004144428019097600';
 	const channel = await client.channels.fetch(channelID).catch((e) => {});
@@ -42,7 +40,6 @@ Quote.afterCreate('s', async (quote) => {
 	if (channel && channel?.isTextBased()) {
 		channel.send({ content: `\`Quote #${quote.id}  Keyword: ${quote.keyword}\` ${quote.text}\n\n<t:${Math.floor(quote.createdAt.getTime() / 1000)}:F>\nCreated by ${createdBy.tag} (${createdBy.id})` });
 	}
-	pm2QuoteCount.set(await Quote.count());
 });
 
 Quote.afterDestroy('s', async (quote) => {
