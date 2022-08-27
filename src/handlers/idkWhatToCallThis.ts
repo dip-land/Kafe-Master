@@ -14,7 +14,7 @@ const channels: Array<string> = [
 	'861372174664073226',
 	'821061080621121596',
 ];
-const maxMessagesBeforeTrigger = 8;
+const maxMessagesBeforeTrigger = 16;
 
 export default async (message: Message<boolean>) => {
 	if (!channels.includes(message.channelId)) return;

@@ -9,7 +9,6 @@ export default (message: Message, prefix: string, client: Client<boolean>) => {
 	if (!command) return;
 
 	if (command.extendedData.disabled) return message.reply('This command is currently disabled.');
-
 	if (!client.cooldowns.has(commandName)) {
 		client.cooldowns.set(commandName, new Collection());
 	}
