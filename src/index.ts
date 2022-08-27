@@ -3,10 +3,11 @@ import { REST } from '@discordjs/rest';
 import 'dotenv/config';
 import { glob } from 'glob';
 import { CommandFile, EventFile } from './types';
-import os from 'os';
+import { platform } from 'os';
 import ora from 'ora';
 
-export const beta = true; //os.release().includes('10.0');
+export const beta = platform() === 'win32';
+console.log(beta)
 
 export const client = new Client({
 	intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers', 'GuildVoiceStates'],
@@ -52,6 +53,3 @@ glob('./dist/events/**/*.js', (err: Error, paths: Array<string>) => {
 
 client.login(beta ? process.env.BETATOKEN : process.env.TOKEN);
 client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN : process.env.TOKEN);
-if (!beta) {
-	os.setPriority(-20);
-}

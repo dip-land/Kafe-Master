@@ -12,7 +12,6 @@ const sequelize = new Sequelize({
 export class Config extends Model {
 	declare id: string;
 	declare prefix: string;
-	
 }
 
 //Quotes
@@ -133,10 +132,10 @@ export async function registerGuild(guild: Guild) {
 
 sequelize.beforeSync('', () => {
 	readFile('./data/db.sqlite', (error, data) => {
-		if (existsSync(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`) || error) return;
-		writeFile(`./data/backups/db_${Math.floor(Date.now() / 10000)}.sqlite`, data.toString(), (error) => {
+		if (existsSync(`./data/backups/db_${Math.floor(Date.now() / 100000)}.sqlite`) || error) return;
+		writeFile(`./data/backups/db_${Math.floor(Date.now() / 100000)}.sqlite`, data.toString(), (error) => {
 			if (error) console.log(error);
-			console.log(`Backup ${Math.floor(Date.now() / 10000)} created.`);
+			console.log(`Backup ${Math.floor(Date.now() / 100000)} created.`);
 			importData('quotes.txt', './data/imports/', true);
 			importData('counters.txt', './data/imports/', true);
 			importData('song_queues.txt', './data/imports/', true);
