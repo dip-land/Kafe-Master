@@ -1,5 +1,5 @@
 import { GuildMember } from 'discord.js';
-import { client } from '../';
+import { client } from '../index.js';
 
 export const name = 'guildMemberAdd';
 export const once = false;

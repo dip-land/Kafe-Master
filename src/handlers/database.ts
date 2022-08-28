@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { DataTypes, Sequelize, Model } from 'sequelize';
-import { beta, client } from '../';
+import { beta, client } from '../index.js';
 import { existsSync, readFile, writeFile, unlinkSync } from 'node:fs';
 const sequelize = new Sequelize({
 	dialect: 'sqlite',

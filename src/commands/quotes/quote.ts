@@ -1,5 +1,5 @@
 import { Message, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption } from 'discord.js';
-import { Quote } from '../../handlers/database';
+import { Quote } from '../../handlers/database.js';
 
 export const data: ChatInputApplicationCommandData = {
 	name: 'quote',

@@ -1,5 +1,5 @@
 import { ButtonInteraction } from 'discord.js';
-import { Quote } from '../database';
+import { Quote } from '../database.js';
 
 export default async (interaction: ButtonInteraction) => {
 	let args = interaction.customId.split('_');

@@ -1,5 +1,5 @@
 import { SelectMenuInteraction } from 'discord.js';
-import { Quote } from '../database';
+import { Quote } from '../database.js';
 
 export default async (interaction: SelectMenuInteraction) => {
 	let args = interaction.customId.split('_');

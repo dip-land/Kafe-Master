@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
-import commandHandler from '../handlers/legacyCommand';
-import memeHandler from '../handlers/meme';
-import idkWhatToCallThisHandler from '../handlers/idkWhatToCallThis';
-import { beta } from '../';
+import commandHandler from '../handlers/legacyCommand.js';
+import memeHandler from '../handlers/meme.js';
+import idkWhatToCallThisHandler from '../handlers/idkWhatToCallThis.js';
+import { beta } from '../index.js';
 
 export const name = 'messageCreate';
 export const once = false;

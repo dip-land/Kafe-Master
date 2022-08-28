@@ -1,8 +1,8 @@
 import { Client, Collection } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import 'dotenv/config';
-import { glob } from 'glob';
-import { CommandFile, EventFile } from './types';
+import glob from 'glob';
+import { CommandFile, EventFile } from './types/index.js';
 import { platform } from 'os';
 import ora from 'ora';
 
@@ -17,12 +17,12 @@ client.cooldowns = new Collection();
 client.legacyCommands = new Collection();
 export const commands = [];
 
-glob('./dist/commands/**/*.js', (err: Error, paths: Array<string>) => {
+glob('./dist/commands/**/*.js', async (err: Error, paths: Array<string>) => {
 	let loader = ora('Loading commands').start();
 	let loadStart = Date.now();
 	for (const path of paths) {
 		try {
-			const command: CommandFile = require(path.replace('./dist', '.'));
+			const command: CommandFile = await import(path.replace('./dist', '.'));
 			client.legacyCommands.set(command.data?.name, command);
 			commands.push(command.data);
 			if (!command.extendedData?.aliases) return;
@@ -35,12 +35,12 @@ glob('./dist/commands/**/*.js', (err: Error, paths: Array<string>) => {
 	loader.succeed(`Commands Loaded. ${Date.now() - loadStart}ms`);
 });
 
-glob('./dist/events/**/*.js', (err: Error, paths: Array<string>) => {
+glob('./dist/events/**/*.js', async (err: Error, paths: Array<string>) => {
 	let loader = ora('Loading Events').start();
 	let loadStart = Date.now();
 	for (const path of paths) {
 		try {
-			const event: EventFile = require(path.replace('./dist', '.'));
+			const event: EventFile = await import(path.replace('./dist', '.'));
 			if (event.once) client.once(event.name, (...args) => event.default(...args));
 			else client.on(event.name, (...args) => event.default(...args));
 		} catch (err) {

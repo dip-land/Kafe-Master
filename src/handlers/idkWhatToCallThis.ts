@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Counter } from './database';
+import { Counter } from './database.js';
 
 //my testing channel, tearoom, and all the channels in massage parlor except basement
 const channels: Array<string> = [
@@ -75,5 +75,5 @@ function finish(message: Message<boolean>, massageParlor: boolean, counter: Coun
 	counter.count = 0;
 	counter.save();
 	const emoji = massageParlor ? '<:lewdheart:1001948634859974746>' : '<a:akafeheart:1009602965616726026>';
-	message.react(emoji).catch((e) => console.log('error reacting to message:', e));
+	message.react(emoji).catch((e: Error) => console.log('error reacting to message:', e.message));
 }
