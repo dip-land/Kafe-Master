@@ -1,5 +1,5 @@
 import { CommandInteraction } from 'discord.js';
-import { CommandFile } from '../../types';
+import { CommandFile } from '../../types/index.js';
 
 export default async (interaction: CommandInteraction) => {
 	const command: CommandFile = interaction.client.legacyCommands.get(interaction.commandName);

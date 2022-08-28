@@ -1,6 +1,6 @@
-import command from '../handlers/interactions/command';
-import button from '../handlers/interactions/button';
-import selectMenu from '../handlers/interactions/selectMenu';
+import command from '../handlers/interactions/command.js';
+import button from '../handlers/interactions/button.js';
+import selectMenu from '../handlers/interactions/selectMenu.js';
 import { Interaction } from 'discord.js';
 
 export const name = 'interactionCreate';

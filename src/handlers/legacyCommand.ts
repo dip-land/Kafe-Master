@@ -1,5 +1,5 @@
 import { Client, Collection, Message } from 'discord.js';
-import { CommandFile } from '../types';
+import { CommandFile } from '../types/index.js';
 
 export default (message: Message, prefix: string, client: Client<boolean>) => {
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
