@@ -10,9 +10,16 @@ const sequelize = new Sequelize({
 
 //Config
 export class Config extends Model {
-	declare id: string;
-	declare prefix: string;
+	declare type: string;
+	declare data: string;
 }
+Config.init(
+	{
+		type: DataTypes.STRING,
+		data: DataTypes.STRING,
+	},
+	{ sequelize, modelName: 'Config', timestamps: false }
+);
 
 //Quotes
 export class Quote extends Model {
@@ -130,6 +137,7 @@ export async function registerGuild(guild: Guild) {
 	}
 }
 
+//import data
 sequelize.beforeSync('', () => {
 	readFile('./data/db.sqlite', (error, data) => {
 		if (existsSync(`./data/backups/db_${Math.floor(Date.now() / 100000)}.sqlite`) || error) return;

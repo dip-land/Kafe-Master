@@ -7,7 +7,6 @@ import { platform } from 'os';
 import ora from 'ora';
 
 export const beta = platform() === 'win32';
-console.log(beta)
 
 export const client = new Client({
 	intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers', 'GuildVoiceStates'],
@@ -25,8 +24,7 @@ glob('./dist/commands/**/*.js', async (err: Error, paths: Array<string>) => {
 			const command: CommandFile = await import(path.replace('./dist', '.'));
 			client.legacyCommands.set(command.data?.name, command);
 			commands.push(command.data);
-			if (!command.extendedData?.aliases) return;
-			for (const alias of command.extendedData?.aliases) client.legacyCommands.set(alias, command);
+			if (command.extendedData?.aliases) for (const alias of command.extendedData?.aliases) client.legacyCommands.set(alias, command);
 		} catch (err) {
 			loader.fail(`Command Loading Failed. ${Date.now() - loadStart}ms`);
 			console.log(err);

@@ -1,4 +1,5 @@
 import { Message, ChatInputApplicationCommandData, Client, CommandInteraction, CommandInteractionOption } from 'discord.js';
+import { CommandFileExtendedData } from 'src/types/index.js';
 
 export const data: ChatInputApplicationCommandData = {
 	name: 'help',
@@ -17,7 +18,7 @@ export const data: ChatInputApplicationCommandData = {
 	],
 };
 
-export const extendedData = {
+export const extendedData: CommandFileExtendedData = {
 	aliases: ['commands', 'cmds'],
 	category: 'utility',
 };

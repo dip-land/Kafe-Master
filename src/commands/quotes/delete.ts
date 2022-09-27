@@ -1,4 +1,5 @@
 import { Message, ChatInputApplicationCommandData, Client, CommandInteraction, CommandInteractionOption } from 'discord.js';
+import { CommandFileExtendedData } from 'src/types/index.js';
 import { Quote } from '../../handlers/database.js';
 
 export const data: ChatInputApplicationCommandData = {
@@ -14,7 +15,7 @@ export const data: ChatInputApplicationCommandData = {
 	],
 };
 
-export const extendedData = {
+export const extendedData: CommandFileExtendedData = {
 	aliases: ['qd', 'qdelete', 'qdel'],
 	category: 'quotes',
 	cooldown: 10,

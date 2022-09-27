@@ -1,4 +1,5 @@
 import { Message, ChatInputApplicationCommandData, Client, CommandInteraction, CommandInteractionOption } from 'discord.js';
+import { CommandFileExtendedData } from 'src/types/index.js';
 import { Quote } from '../../handlers/database.js';
 
 export const data: ChatInputApplicationCommandData = {
@@ -19,7 +20,7 @@ export const data: ChatInputApplicationCommandData = {
 	],
 };
 
-export const extendedData = {
+export const extendedData: CommandFileExtendedData = {
 	aliases: ['qs', 'qsearch', 'qid'],
 	category: 'quotes',
 };
@@ -47,8 +48,8 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 					},
 				],
 			});
-		} else {
-			let quotes = await Quote.findAll({ where: { keyword: query } });
+		} else if(typeof query === 'string') {
+			let quotes = await Quote.findAll({ where: { keyword: query.toLowerCase() } });
 			let parsedQuotes = [];
 			for (const quote of quotes) {
 				parsedQuotes.push({
@@ -119,7 +120,7 @@ export async function legacy(message: Message, args: Array<string>, client: Clie
 			],
 		});
 	} else {
-		let quotes = await Quote.findAll({ where: { keyword: args[0] } });
+		let quotes = await Quote.findAll({ where: { keyword: args[0].toLowerCase() } });
 		let parsedQuotes = [];
 		for (const quote of quotes) {
 			parsedQuotes.push({
