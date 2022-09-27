@@ -1,4 +1,5 @@
 import { Message, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption } from 'discord.js';
+import { CommandFileExtendedData } from 'src/types/index.js';
 import { Quote } from '../../handlers/database.js';
 
 export const data: ChatInputApplicationCommandData = {
@@ -14,14 +15,14 @@ export const data: ChatInputApplicationCommandData = {
 	],
 };
 
-export const extendedData = {
+export const extendedData: CommandFileExtendedData = {
 	aliases: ['q'],
 	category: 'quotes',
 };
 
 export default async (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
 	try {
-		let keyword = options.find((option) => option.name === 'keyword')?.value;
+		let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
 		let quotes = await Quote.findAll({ where: { keyword: keyword } });
 		let chosen = quotes[Math.floor(Math.random() * quotes.length)];
 		interaction.editReply(chosen?.text || 'This keyword has no quotes, sempai~');
@@ -32,7 +33,7 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 
 export async function legacy(message: Message, args: Array<string>) {
 	if (!args[0]) return message.reply('You nyeed the keyword, desu~');
-	let quotes = await Quote.findAll({ where: { keyword: args[0] } });
+	let quotes = await Quote.findAll({ where: { keyword: args[0].toLowerCase() } });
 	let chosen = quotes[Math.floor(Math.random() * quotes.length)];
 	message.channel.send(chosen?.text || 'This keyword has no quotes, sempai~');
 }

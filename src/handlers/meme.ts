@@ -20,7 +20,7 @@ export default async (message: Message<boolean>, channel: Channel) => {
 		let contents = message.content.split(/[\n\r\s]+/);
 		let checks: Array<number> = [];
 		for (const content of contents) {
-			if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)) {
+			if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com/')||content.startsWith('https://twitter.com/') || content.startsWith('https://vxtwitter.com/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)) {
 				checks.push(1);
 			} else {
 				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
