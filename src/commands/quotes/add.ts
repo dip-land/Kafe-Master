@@ -1,8 +1,7 @@
-import { Message, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption } from 'discord.js';
-import { CommandFileExtendedData } from 'src/types/index.js';
-import { Quote } from '../../handlers/database.js';
+import { Command } from '../../structures/command.js';
+import Quote from '../../structures/database/quote.js';
 
-export const data: ChatInputApplicationCommandData = {
+export default new Command({
 	name: 'quoteadd',
 	description: 'Create a quote',
 	options: [
@@ -19,31 +18,26 @@ export const data: ChatInputApplicationCommandData = {
 			required: true,
 		},
 	],
-};
-
-export const extendedData: CommandFileExtendedData = {
 	aliases: ['qa', 'qadd'],
 	category: 'quotes',
 	cooldown: 10,
-};
-
-export default (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	try {
-		let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
-		let text = options.find((option) => option.name === 'text')?.value;
-		new Quote({ keyword: keyword, text: text, createdBy: interaction.user.id }).save().then((q) => {
-			interaction.editReply(`Quote #${q.id} cweated :3`);
+	async slashCommand(interaction, options) {
+		try {
+			let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
+			let text = options.find((option) => option.name === 'text')?.value;
+			new Quote({ keyword: keyword, text: text, createdBy: interaction.user.id }).save().then((q) => {
+				interaction.editReply(`Quote #${q.id} cweated :3`);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	async prefixCommand(message, args) {
+		if (!args[0]) return message.reply('Nyu keyword or text provided miyaaaa~!');
+		let keyword = args.shift();
+		if (!args[0]) return message.reply('Nyow add the text desu~!');
+		new Quote({ keyword: keyword?.toLowerCase(), text: args.join(' '), createdBy: message.author.id }).save().then((q) => {
+			message.reply(`Quote #${q.id} cweated :3`);
 		});
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-export async function legacy(message: Message, args: Array<string>) {
-	if (!args[0]) return message.reply('Nyu keyword or text provided miyaaaa~!');
-	let keyword = args.shift();
-	if (!args[0]) return message.reply('Nyow add the text desu~!');
-	new Quote({ keyword: keyword.toLowerCase(), text: args.join(' '), createdBy: message.author.id }).save().then((q) => {
-		message.reply(`Quote #${q.id} cweated :3`);
-	});
-}
+	},
+});

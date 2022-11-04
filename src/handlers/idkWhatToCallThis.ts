@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { Counter } from './database.js';
+import Counter from '../structures/database//counter.js';
 
 //my testing channel, tearoom, and all the channels in massage parlor except basement
 const channels: Array<string> = [
@@ -25,7 +25,7 @@ export default async (message: Message<boolean>) => {
 	if (message.attachments.size > 0) {
 		let checks: Array<number> = [];
 		for (const [s, attachment] of message.attachments) {
-			if (attachment.contentType.match(/video\/|image\//g)) checks.push(1);
+			if (attachment.contentType?.match(/video\/|image\//g)) checks.push(1);
 			else checks.push(0);
 		}
 		if (!checks.includes(0)) return finish(message, massageParlor, counter);
@@ -40,7 +40,7 @@ export default async (message: Message<boolean>) => {
 				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 				if (data) {
 					let type = data.headers.get('content-type');
-					if (type.match(/video\/|image\//g)) checks.push(1);
+					if (type?.match(/video\/|image\//g)) checks.push(1);
 					else checks.push(0);
 				}
 			}
