@@ -1,8 +1,9 @@
 import type { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message, PermissionResolvable } from 'discord.js';
+import { Command } from '../structures/command.js';
 declare module 'discord.js' {
 	interface Client {
 		cooldowns: Collection<string, any>;
-		legacyCommands: Collection<string, CommandFile>;
+		legacyCommands: Collection<string, Command>;
 	}
 
 	interface APIInteractionGuildMember {
@@ -34,8 +35,10 @@ export type EventFile = {
 export type channelConfigData = {
 	emojis: Array<string>;
 	allowedURLs: Array<string>;
-	attachmentOnlyMode: string;
-	maxMessages: string;
-	bypassUserImage: string;
-	bypassUserMaxMessages: string;
+	attachmentOnlyMode: boolean;
+	maxMessages: number;
+	messages: Array<string>;
+	deleteAtMax: boolean;
+	bypassUsersImage: Array<string>;
+	bypassUsersMaxMessages: Array<string>;
 };

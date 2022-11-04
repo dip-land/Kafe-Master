@@ -1,8 +1,7 @@
-import { Message, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption } from 'discord.js';
-import { CommandFileExtendedData } from 'src/types/index.js';
-import { Quote } from '../../handlers/database.js';
+import { Command } from '../../structures/command.js';
+import Quote from '../../structures/database/quote.js';
 
-export const data: ChatInputApplicationCommandData = {
+export default new Command({
 	name: 'quote',
 	description: 'Just some quotes',
 	options: [
@@ -13,27 +12,22 @@ export const data: ChatInputApplicationCommandData = {
 			required: true,
 		},
 	],
-};
-
-export const extendedData: CommandFileExtendedData = {
 	aliases: ['q'],
 	category: 'quotes',
-};
-
-export default async (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	try {
-		let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
-		let quotes = await Quote.findAll({ where: { keyword: keyword } });
+	async slashCommand(interaction, options) {
+		try {
+			let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
+			let quotes = await Quote.findAll({ where: { keyword: keyword } });
+			let chosen = quotes[Math.floor(Math.random() * quotes.length)];
+			interaction.editReply(chosen?.text || 'This keyword has no quotes, sempai~');
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	async prefixCommand(message, args) {
+		if (!args[0]) return message.reply('You nyeed the keyword, desu~');
+		let quotes = await Quote.findAll({ where: { keyword: args[0].toLowerCase() } });
 		let chosen = quotes[Math.floor(Math.random() * quotes.length)];
-		interaction.editReply(chosen?.text || 'This keyword has no quotes, sempai~');
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-export async function legacy(message: Message, args: Array<string>) {
-	if (!args[0]) return message.reply('You nyeed the keyword, desu~');
-	let quotes = await Quote.findAll({ where: { keyword: args[0].toLowerCase() } });
-	let chosen = quotes[Math.floor(Math.random() * quotes.length)];
-	message.channel.send(chosen?.text || 'This keyword has no quotes, sempai~');
-}
+		message.channel.send(chosen?.text || 'This keyword has no quotes, sempai~');
+	},
+});

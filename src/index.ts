@@ -2,9 +2,10 @@ import { Client, Collection } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import 'dotenv/config';
 import glob from 'glob';
-import { CommandFile, EventFile } from './types/index.js';
+import { EventFile } from './types/index.js';
 import { platform } from 'os';
 import ora from 'ora';
+import { Command } from './structures/command.js';
 
 export const beta = platform() === 'win32';
 
@@ -16,15 +17,15 @@ client.cooldowns = new Collection();
 client.legacyCommands = new Collection();
 export const commands = [];
 
-glob('./dist/commands/**/*.js', async (err: Error, paths: Array<string>) => {
+glob('./dist/commands/**/*.js', async (err: Error | null, paths: Array<string>) => {
 	let loader = ora('Loading commands').start();
 	let loadStart = Date.now();
 	for (const path of paths) {
 		try {
-			const command: CommandFile = await import(path.replace('./dist', '.'));
-			client.legacyCommands.set(command.data?.name, command);
-			commands.push(command.data);
-			if (command.extendedData?.aliases) for (const alias of command.extendedData?.aliases) client.legacyCommands.set(alias, command);
+			const command: Command = (await import(path.replace('./dist', '.'))).default;
+			client.legacyCommands.set(command.commandObject?.name, command);
+			if (typeof command?.slashCommand === 'function') commands.push(command.applicationData as never);
+			if (command.commandObject?.aliases) for (const alias of command.commandObject?.aliases) client.legacyCommands.set(alias, command);
 		} catch (err) {
 			loader.fail(`Command Loading Failed. ${Date.now() - loadStart}ms`);
 			console.log(err);
@@ -33,7 +34,7 @@ glob('./dist/commands/**/*.js', async (err: Error, paths: Array<string>) => {
 	loader.succeed(`Commands Loaded. ${Date.now() - loadStart}ms`);
 });
 
-glob('./dist/events/**/*.js', async (err: Error, paths: Array<string>) => {
+glob('./dist/events/**/*.js', async (err: Error | null, paths: Array<string>) => {
 	let loader = ora('Loading Events').start();
 	let loadStart = Date.now();
 	for (const path of paths) {
@@ -50,4 +51,4 @@ glob('./dist/events/**/*.js', async (err: Error, paths: Array<string>) => {
 });
 
 client.login(beta ? process.env.BETATOKEN : process.env.TOKEN);
-client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN : process.env.TOKEN);
+client.rest = new REST({ version: '10' }).setToken(beta ? process.env.BETATOKEN as string : process.env.TOKEN as string);

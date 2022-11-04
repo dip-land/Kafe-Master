@@ -1,22 +1,18 @@
 import { ButtonInteraction } from 'discord.js';
-import { Quote } from '../database.js';
+import { Command } from '../../structures/command.js';
 
 export default async (interaction: ButtonInteraction) => {
 	let args = interaction.customId.split('_');
-	let cmd = args[1];
-	let msg = args[args.length - 1];
-	if (args[0] !== interaction.user.id) interaction.reply({ content: 'Only command initiator can use these buttons.', ephemeral: true });
-	if (cmd === 'cancel') {
-		interaction.reply({ content: 'Command canceled.', ephemeral: true });
-		interaction.message.delete();
-		(await interaction.channel.messages.fetch(msg)).delete();
+	let commandName = args[0];
+	const command = interaction.client.legacyCommands.get(commandName) as Command;
+	let message = args[2] === 'i' ? undefined : await interaction.channel?.messages.fetch(args[2]);
+	if (args[1] !== interaction.user.id) interaction.reply({ content: 'Only command initiator can use these buttons.', ephemeral: true });
+	if (commandName === 'cancel') {
+		interaction.reply({ content: 'Command canceled.', ephemeral: true }).catch((e) => {});
+		interaction.message.delete().catch((e) => {});
+		message?.delete().catch((e) => {});
+		return;
 	}
-	if (cmd === 'qd') {
-		let quote = await Quote.findOne({ where: { id: args[2] } });
-		quote.destroy().then(async (q) => {
-			interaction.reply({ content: 'Quote deleted.', ephemeral: true });
-			interaction.message.delete();
-			(await interaction.channel.messages.fetch(msg)).delete();
-		});
-	}
+	if (!command?.commandObject) return;
+	command.button(interaction, message, args).catch((e) => {});
 };

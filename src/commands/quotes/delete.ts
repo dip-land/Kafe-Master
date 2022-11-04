@@ -1,8 +1,7 @@
-import { Message, ChatInputApplicationCommandData, Client, CommandInteraction, CommandInteractionOption } from 'discord.js';
-import { CommandFileExtendedData } from 'src/types/index.js';
-import { Quote } from '../../handlers/database.js';
+import { Command } from '../../structures/command.js';
+import Quote from '../../structures/database/quote.js';
 
-export const data: ChatInputApplicationCommandData = {
+export default new Command({
 	name: 'quotedelete',
 	description: 'Delete a quote by its ID',
 	options: [
@@ -13,22 +12,64 @@ export const data: ChatInputApplicationCommandData = {
 			required: true,
 		},
 	],
-};
-
-export const extendedData: CommandFileExtendedData = {
 	aliases: ['qd', 'qdelete', 'qdel'],
 	category: 'quotes',
 	cooldown: 10,
-};
-
-export default async (interaction: CommandInteraction, options: Array<CommandInteractionOption>) => {
-	try {
-		let id = options.find((option) => option.name === 'id')?.value;
+	async slashCommand(interaction, options) {
+		try {
+			let id = options.find((option) => option.name === 'id')?.value as string;
+			let quote = await Quote.findOne({ where: { id } });
+			if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
+			let createdBy = await interaction.client.users.fetch(quote.createdBy);
+			if (!interaction.memberPermissions?.has('Administrator') || interaction.user.id !== createdBy.id) return;
+			interaction.editReply({
+				embeds: [
+					{
+						color: 0xfab6ec,
+						title: `Do you wanna compost this quote, myaa?`,
+						description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
+							quote.createdAt.getTime() / 1000
+						)}:F>\n`,
+						timestamp: new Date().toISOString(),
+						footer: {
+							text: `Requested by ${interaction.user.tag}`,
+							icon_url: interaction.user.displayAvatarURL(),
+						},
+					},
+				],
+				components: [
+					{
+						type: 1,
+						components: [
+							{
+								type: 2,
+								customId: `quotedelete_${interaction.user.id}_i_${quote.id}`,
+								label: 'Yes',
+								style: 4,
+							},
+							{
+								type: 2,
+								customId: `cancel_${interaction.user.id}_i`,
+								label: 'No',
+								style: 2,
+							},
+						],
+					},
+				],
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	},
+	async prefixCommand(message, args) {
+		if (!args[0]) return message.reply('No ID was provided.');
+		let id = parseInt(args[0]);
+		if (!id) return;
 		let quote = await Quote.findOne({ where: { id } });
-		if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
-		let createdBy = await interaction.client.users.fetch(quote.createdBy);
-		if (!interaction.memberPermissions.has('Administrator') || interaction.user.id !== createdBy.id) return;
-		interaction.editReply({
+		if (!quote) return message.reply(`The quote #${id} jar is empty :3`);
+		let createdBy = await message.client.users.fetch(quote.createdBy);
+		if (!message.member?.permissions.has('Administrator') || message.author.id !== createdBy.id) return;
+		message.reply({
 			embeds: [
 				{
 					color: 0xfab6ec,
@@ -38,8 +79,8 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 					)}:F>\n`,
 					timestamp: new Date().toISOString(),
 					footer: {
-						text: `Requested by ${interaction.user.tag}`,
-						icon_url: interaction.user.displayAvatarURL(),
+						text: `Requested by ${message.author.tag}`,
+						icon_url: message.author.displayAvatarURL(),
 					},
 				},
 			],
@@ -49,13 +90,13 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 					components: [
 						{
 							type: 2,
-							customId: `${interaction.user.id}_qd_${quote.id}_${interaction.id}`,
+							customId: `quotedelete_${message.author.id}_${message.id}_${quote.id}`,
 							label: 'Yes',
 							style: 4,
 						},
 						{
 							type: 2,
-							customId: `${interaction.user.id}_cancel_${interaction.id}`,
+							customId: `cancel_${message.author.id}_${message.id}`,
 							label: 'No',
 							style: 2,
 						},
@@ -63,52 +104,14 @@ export default async (interaction: CommandInteraction, options: Array<CommandInt
 				},
 			],
 		});
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-export async function legacy(message: Message, args: Array<string>, client: Client<boolean>) {
-	if (!args[0]) return message.reply('No ID was provided.');
-	let id = parseInt(args[0]);
-	if (!id) return;
-	let quote = await Quote.findOne({ where: { id } });
-	if (!quote) return message.reply(`The quote #${id} jar is empty :3`);
-	let createdBy = await client.users.fetch(quote.createdBy);
-	if (!message.member.permissions.has('Administrator') || message.author.id !== createdBy.id) return;
-	message.reply({
-		embeds: [
-			{
-				color: 0xfab6ec,
-				title: `Do you wanna compost this quote, myaa?`,
-				description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
-					quote.createdAt.getTime() / 1000
-				)}:F>\n`,
-				timestamp: new Date().toISOString(),
-				footer: {
-					text: `Requested by ${message.author.tag}`,
-					icon_url: message.author.displayAvatarURL(),
-				},
-			},
-		],
-		components: [
-			{
-				type: 1,
-				components: [
-					{
-						type: 2,
-						customId: `${message.author.id}_qd_${quote.id}_${message.id}`,
-						label: 'Yes',
-						style: 4,
-					},
-					{
-						type: 2,
-						customId: `${message.author.id}_cancel_${message.id}`,
-						label: 'No',
-						style: 2,
-					},
-				],
-			},
-		],
-	});
-}
+	},
+	async button(interaction, message, args) {
+		let quote = await Quote.findOne({ where: { id: args[3] } });
+		quote?.destroy().then(async (q) => {
+			interaction.deleteReply().catch((e) => {});
+			interaction.reply({ content: 'Quote deleted.', ephemeral: true }).catch((e) => {});
+			interaction.message.delete().catch((e) => {});
+			message?.delete().catch((e) => {});
+		});
+	},
+});
