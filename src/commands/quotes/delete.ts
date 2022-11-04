@@ -21,7 +21,7 @@ export default new Command({
 			let quote = await Quote.findOne({ where: { id } });
 			if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
 			let createdBy = await interaction.client.users.fetch(quote.createdBy);
-			if (!interaction.memberPermissions?.has('Administrator') || interaction.user.id !== createdBy.id) return;
+			if (!interaction.memberPermissions?.has('Administrator')) if (interaction.user.id !== createdBy.id) return;
 			interaction.editReply({
 				embeds: [
 					{
@@ -68,7 +68,7 @@ export default new Command({
 		let quote = await Quote.findOne({ where: { id } });
 		if (!quote) return message.reply(`The quote #${id} jar is empty :3`);
 		let createdBy = await message.client.users.fetch(quote.createdBy);
-		if (!message.member?.permissions.has('Administrator') || message.author.id !== createdBy.id) return;
+		if (!message.member?.permissions.has('Administrator')) if (message.author.id !== createdBy.id) return;
 		message.reply({
 			embeds: [
 				{
