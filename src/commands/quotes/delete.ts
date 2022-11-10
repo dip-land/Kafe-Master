@@ -11,6 +11,11 @@ export default new Command({
 			description: 'The quotes ID',
 			required: true,
 		},
+		{
+			type: 5,
+			name: 'hide',
+			description: 'Hide the response',
+		},
 	],
 	aliases: ['qd', 'qdelete', 'qdel'],
 	category: 'quotes',

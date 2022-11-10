@@ -37,6 +37,11 @@ export default new Command({
 			description: 'View a list of all prefixes',
 			type: ApplicationCommandOptionType.Subcommand,
 		},
+		{
+			type: 5,
+			name: 'hide',
+			description: 'Hide the response',
+		},
 	],
 	aliases: [],
 	category: 'config',
