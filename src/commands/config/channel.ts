@@ -138,6 +138,11 @@ export default new Command({
 				},
 			],
 		},
+		{
+			type: 5,
+			name: 'hide',
+			description: 'Hide the response',
+		},
 	],
 	aliases: [],
 	category: 'config',
