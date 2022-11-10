@@ -58,6 +58,11 @@ export default new Command({
 					description: 'User that can bypass the maximum number of non-attachment messages',
 					type: ApplicationCommandOptionType.String,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
 		},
 		{
@@ -111,6 +116,11 @@ export default new Command({
 					description: 'User that can bypass the maximum number of non-attachment messages',
 					type: ApplicationCommandOptionType.String,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
 		},
 		{
@@ -124,6 +134,11 @@ export default new Command({
 					type: ApplicationCommandOptionType.Channel,
 					required: true,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
 		},
 		{
@@ -136,12 +151,12 @@ export default new Command({
 					description: 'The channel you want to view the config of',
 					type: ApplicationCommandOptionType.Channel,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
-		},
-		{
-			type: 5,
-			name: 'hide',
-			description: 'Hide the response',
 		},
 	],
 	aliases: [],

@@ -17,6 +17,11 @@ export default new Command({
 					type: ApplicationCommandOptionType.String,
 					required: true,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
 		},
 		{
@@ -30,17 +35,24 @@ export default new Command({
 					type: ApplicationCommandOptionType.String,
 					required: true,
 				},
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
 			],
 		},
 		{
 			name: 'view',
 			description: 'View a list of all prefixes',
 			type: ApplicationCommandOptionType.Subcommand,
-		},
-		{
-			type: 5,
-			name: 'hide',
-			description: 'Hide the response',
+			options: [
+				{
+					type: 5,
+					name: 'hide',
+					description: 'Hide the response',
+				},
+			]
 		},
 	],
 	aliases: [],
