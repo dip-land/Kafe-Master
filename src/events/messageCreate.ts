@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import type { Message } from 'discord.js';
 import prefixCommand from '../handlers/prefixCommand.js';
 import { beta } from '../index.js';
 import Config from '../structures/database/config.js';
@@ -15,13 +15,13 @@ export default async (message: Message<boolean>) => {
 	memeHandler(message, message.channel);
 	idkWhatToCallThisHandler(message);
 
-	let prefixes = beta ? [] : ['.', '<@995370187626905611>'];
+	const prefixes = beta ? [] : ['.', '<@995370187626905611>'];
 	const configPrefixes = beta ? await Config.findAll({ where: { type: 'prefix' } }) : [];
 	for (const prefix of configPrefixes) {
 		prefixes.push(prefix.data);
 	}
 	if (!prefixes[0]) prefixes.push('hm!');
-	let prefix = prefixes.find((p) => message.content.startsWith(p));
+	const prefix = prefixes.find((p) => message.content.startsWith(p));
 	if (prefix === undefined) return;
 	if (!beta && message.guildId !== '632717913169854495') return;
 	prefixCommand(message, prefix, message.client);

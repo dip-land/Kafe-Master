@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import type { Message } from 'discord.js';
 import Counter from '../structures/database//counter.js';
 
 //my testing channel, tearoom, and all the channels in massage parlor except basement
@@ -23,23 +23,24 @@ export default async (message: Message<boolean>) => {
 	const massageParlor = message.channel.parentId === '683772220467838995';
 	const counter = (await Counter.findOrCreate({ where: { id: message.channelId } }))[0];
 	if (message.attachments.size > 0) {
-		let checks: Array<number> = [];
+		const checks: Array<number> = [];
 		for (const [s, attachment] of message.attachments) {
+			if (s) null;
 			if (attachment.contentType?.match(/video\/|image\//g)) checks.push(1);
 			else checks.push(0);
 		}
 		if (!checks.includes(0)) return finish(message, massageParlor, counter);
 	}
 	if (message.content) {
-		let contents = message.content.split(' ');
-		let checks: Array<number> = [];
+		const contents = message.content.split(' ');
+		const checks: Array<number> = [];
 		for (const content of contents) {
-			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://twitter.com/')) {
+			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://twitter.com/')) {
 				checks.push(1);
 			} else if (content.startsWith('http')) {
-				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
+				const data = await fetch(content, { method: 'HEAD' }).catch();
 				if (data) {
-					let type = data.headers.get('content-type');
+					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\//g)) checks.push(1);
 					else checks.push(0);
 				}
@@ -53,9 +54,9 @@ export default async (message: Message<boolean>) => {
 				const sendMessage = massageParlor ? "❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!" : "❕>w< w-where's the cute~?? Post more cute~!";
 				message.channel.send(sendMessage).then((msg) => {
 					setTimeout(() => {
-						msg.delete().catch((e) =>
+						msg.delete().catch(() =>
 							setTimeout(() => {
-								msg.delete().catch((e) =>
+								msg.delete().catch(() =>
 									setTimeout(() => {
 										msg.delete().catch((e) => console.log(e));
 									}, 60000 * 2)

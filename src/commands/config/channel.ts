@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js';
 import { Command } from '../../structures/command.js';
-import { channelConfigData } from 'src/types/index.js';
+import type { channelConfigData } from 'src/types/index.js';
 import Config from '../../structures/database/config.js';
 
 export default new Command({
@@ -166,29 +166,41 @@ export default new Command({
 	async slashCommand(interaction, options) {
 		const subOptions = options[0];
 		const subSubOptions = subOptions.options as typeof options;
-
-		let channel = subSubOptions.find((a) => a.name === 'channel')?.value;
-		let emojis = `${subSubOptions.find((a) => a.name === 'emojis')?.value || ['']}`.split(' ');
-		let allowedURLs = `${subSubOptions.find((a) => a.name === 'allowedurls')?.value || ['']}`.split(' ');
-		let attachmentOnlyMode = subSubOptions.find((a) => a.name === 'attachmentonlymode')?.value || false;
-		let maxMessages = subSubOptions.find((a) => a.name === 'maxmessages')?.value || 0;
-		let messages = `${subSubOptions.find((a) => a.name === 'messages')?.value || ['']}`.split(';');
-		let deleteAtMax = subSubOptions.find((a) => a.name === 'delete_at_max')?.value || false;
-		let bypassUsersImage = `${subSubOptions.find((a) => a.name === 'bypassusers_image')?.value || ['']}`.split(' ');
-		let bypassUsersMaxMessages = `${subSubOptions.find((a) => a.name === 'bypassusers_maxmessages')?.value || ['']}`.split(' ');
-        let data = JSON.stringify({ emojis, allowedURLs, attachmentOnlyMode, maxMessages, messages, deleteAtMax, bypassUsersImage, bypassUsersMaxMessages });
+		const channel = subSubOptions.find((a) => a.name === 'channel')?.value as string;
+		const emojis = `${subSubOptions.find((a) => a.name === 'emojis')?.value || ['']}`.split(' ');
+		const allowedURLs = `${subSubOptions.find((a) => a.name === 'allowedurls')?.value || ['']}`.split(' ');
+		const attachmentOnlyMode = subSubOptions.find((a) => a.name === 'attachmentonlymode')?.value || false;
+		const maxMessages = subSubOptions.find((a) => a.name === 'maxmessages')?.value || 0;
+		const messages = `${subSubOptions.find((a) => a.name === 'messages')?.value || ['']}`.split(';');
+		const deleteAtMax = subSubOptions.find((a) => a.name === 'delete_at_max')?.value || false;
+		const bypassUsersImage = `${subSubOptions.find((a) => a.name === 'bypassusers_image')?.value || ['']}`.split(' ');
+		const bypassUsersMaxMessages = `${subSubOptions.find((a) => a.name === 'bypassusers_maxmessages')?.value || ['']}`.split(' ');
+		const data = JSON.stringify({
+			emojis,
+			allowedURLs,
+			attachmentOnlyMode,
+			maxMessages,
+			messages,
+			deleteAtMax,
+			bypassUsersImage,
+			bypassUsersMaxMessages,
+		});
 
 		if (subOptions.name === 'add') {
-            let config = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
-            if (config?.data) return interaction.editReply(`Config for \`${channel}\` already has a config, please use the \`channel update\` or \`channel remove\` command.`)
+			const config = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
+			if (config?.data) {
+				return interaction.editReply(`Config for \`${channel}\` already has a config, please use the \`channel update\` or \`channel remove\` command.`);
+			}
 			new Config({ type: `channel_${channel}`, data }).save();
 			interaction.editReply(
 				`Added settings for this channel\n**Channel:** <#${channel}>\n**Attachment Emojis:** ${emojis}\n**Allowed URLs:** ${allowedURLs}\n**Attachment only mode:** ${attachmentOnlyMode}\n**Max Non-Attachment Messages:** ${maxMessages}\n**Attachment bypass:** ${bypassUsersImage}\n**Max Messages bypass:** ${bypassUsersMaxMessages}`
 			);
 		} else if (subOptions.name === 'update') {
-			let config = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
-			if (!config?.data) return interaction.editReply('That channel does not have an existing config, use the add subcommand to create a new one instead.');
-			let ocd: channelConfigData = JSON.parse(config.data);
+			const config = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
+			if (!config?.data) {
+				return interaction.editReply('That channel does not have an existing config, use the add subcommand to create a new one instead.');
+			}
+			const ocd: channelConfigData = JSON.parse(config.data);
 			config.data = data;
 			config.save();
 			interaction.editReply(
@@ -199,21 +211,21 @@ export default new Command({
 			interaction.editReply(`Channel config \`${channel}\` has been removed.`);
 		} else if (subOptions.name === 'view') {
 			if (!channel) {
-				let configs = await Config.findAll();
-				let channels: Array<string> = [];
+				const configs = await Config.findAll();
+				const channels: Array<string> = [];
 				for (const config of configs) {
 					if (config.type.includes('channel')) channels.push(`${config.type.replace('channel_', '<#')}>`);
 				}
 				if (!channels[0]) interaction.editReply('No Channel configs exist.');
 				else interaction.editReply(`Here are all the channels that have configs ${channels.join(' ')}`);
 			} else {
-				let channelConfig = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
+				const channelConfig = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
 				if (!channelConfig?.type) return interaction.editReply('The specified channel does not have a config.');
 				const channelConfigData: channelConfigData = JSON.parse(channelConfig?.data);
 				interaction.editReply(
 					JSON.stringify(channelConfigData, null, 1)
 						.replaceAll('\\"', "'")
-						.replace(/\{|\}|\"/g, '')
+						.replace(/\{|\}|"/g, '')
 				);
 			}
 		}

@@ -1,5 +1,5 @@
-import { Message } from 'discord.js';
-import { channelConfigData } from 'src/types/index.js';
+import type { Message } from 'discord.js';
+import type { channelConfigData } from 'src/types/index.js';
 import Config from '../structures/database/config.js';
 import Counter from '../structures/database/counter.js';
 
@@ -13,8 +13,8 @@ export default async (message: Message<boolean>) => {
 	const maxMessages: number = channelConfigData.maxMessages;
 	const messages: Array<string> = channelConfigData.messages;
 	const deleteAtMax: boolean = channelConfigData.deleteAtMax;
-	const bypassUsersImage: Array<string> = channelConfigData.bypassUsersImage;
-	const bypassUserMaxMessages: Array<string> = channelConfigData.bypassUsersMaxMessages;
+	//const bypassUsersImage: Array<string> = channelConfigData.bypassUsersImage;
+	//const bypassUserMaxMessages: Array<string> = channelConfigData.bypassUsersMaxMessages;
 	const maxMessagesEnabled: boolean = maxMessages >= 0;
 	const counter: Counter = (await Counter.findOrCreate({ where: { id: message.channelId } }))[0];
 
@@ -24,6 +24,7 @@ export default async (message: Message<boolean>) => {
 	//Check if message has attachments
 	if (message.attachments.size > 0) {
 		for (const [s, attachment] of message.attachments) {
+			if (s) null;
 			//If onlyImageModeEnabled and the attachment is not of contentType video or image the message will be deleted
 			if (!attachment.contentType?.match(/video\/|image\/|webm/g) && attachmentOnlyMode) return deleteMessage(message, messages);
 		}
@@ -34,9 +35,9 @@ export default async (message: Message<boolean>) => {
 	//Check if message has any text content
 	if (message.content) {
 		//Split the contents in to an array
-		let contents: Array<string> = message.content.split(/[\n\r\s]+/);
-		
-		let checks: Array<number> = [];
+		const contents: Array<string> = message.content.split(/[\n\r\s]+/);
+
+		const checks: Array<number> = [];
 
 		//Check if maxMessagesEnabled is true
 		if (maxMessagesEnabled) {
@@ -60,9 +61,9 @@ export default async (message: Message<boolean>) => {
 			if (allowedURLS.includes(content)) checks.push(1);
 			else {
 				//Fetch the content and checks if it is a video, image or webm
-				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
+				const data = await fetch(content, { method: 'HEAD' }).catch();
 				if (data) {
-					let type = data.headers.get('content-type');
+					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\/|webm/g)) checks.push(1);
 					else checks.push(0);
 				} else checks.push(0);
@@ -79,7 +80,7 @@ export default async (message: Message<boolean>) => {
 };
 
 //Resets Counter and reacts with emojis
-function finish(message: Message<boolean>, emojis: Array<string>, counter: Counter, reset: boolean = true) {
+function finish(message: Message<boolean>, emojis: Array<string>, counter: Counter, reset = true) {
 	//Reset Counter
 	if (reset) {
 		counter.count = 0;
@@ -88,7 +89,7 @@ function finish(message: Message<boolean>, emojis: Array<string>, counter: Count
 
 	//React with emojis if there are any
 	for (const emoji of emojis) {
-		message.react(emoji).catch((e) => {});
+		message.react(emoji).catch();
 	}
 }
 

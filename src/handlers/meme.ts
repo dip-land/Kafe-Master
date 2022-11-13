@@ -1,4 +1,4 @@
-import { DMChannel, Message, NewsChannel, PartialDMChannel, PrivateThreadChannel, PublicThreadChannel, TextChannel, VoiceChannel } from 'discord.js';
+import type { DMChannel, Message, NewsChannel, PartialDMChannel, PrivateThreadChannel, PublicThreadChannel, TextChannel, VoiceChannel } from 'discord.js';
 
 //                               memes                 testing
 const channels: Array<string> = ['960560813637255189', '995368611822706708'];
@@ -8,8 +8,9 @@ export default async (message: Message<boolean>, channel: Channel) => {
 	if (message.content.includes('\\')) deleteMessage(message, channel, 5);
 	if (message.stickers.size > 0) deleteMessage(message, channel, 5);
 	if (message.attachments.size > 0) {
-		let checks: Array<number> = [];
+		const checks: Array<number> = [];
 		for (const [s, attachment] of message.attachments) {
+			if (s) null;
 			if (attachment.contentType?.match(/video\/|image\//g)) checks.push(1);
 			else checks.push(0);
 		}
@@ -17,15 +18,21 @@ export default async (message: Message<boolean>, channel: Channel) => {
 		else return finish(message);
 	}
 	if (message.content) {
-		let contents = message.content.split(/[\n\r\s]+/);
-		let checks: Array<number> = [];
+		const contents = message.content.split(/[\n\r\s]+/);
+		const checks: Array<number> = [];
 		for (const content of contents) {
-			if (content.startsWith('https://tenor.com/view/') || content.startsWith('https://www.reddit.com/')||content.startsWith('https://twitter.com/') || content.startsWith('https://vxtwitter.com/') || content.match(/^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)) {
+			if (
+				content.startsWith('https://tenor.com/view/') ||
+				content.startsWith('https://www.reddit.com/') ||
+				content.startsWith('https://twitter.com/') ||
+				content.startsWith('https://vxtwitter.com/') ||
+				content.match(/^(https?:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)
+			) {
 				checks.push(1);
 			} else {
-				let data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
+				const data = await fetch(content, { method: 'HEAD' }).catch();
 				if (data) {
-					let type = data.headers.get('content-type');
+					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\/|webm/g)) checks.push(1);
 					else checks.push(0);
 				}

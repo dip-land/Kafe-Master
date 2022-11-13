@@ -17,10 +17,10 @@ export default new Command({
 	],
 	aliases: ['commands', 'cmds'],
 	category: 'utility',
-	async slashCommand(interaction, options) {
+	async slashCommand(interaction) {
 		interaction.editReply('Command not avaliable.');
 	},
-	async prefixCommand(message, args) {
+	async prefixCommand(message) {
 		message.reply('Command not avaliable.');
 	},
 });

@@ -6,7 +6,7 @@ import glob from 'glob';
 export const startBackups = async () => {
 	sequelize.beforeSync('', () => {
 		readFile('./data/db.sqlite', (error, data) => {
-			let backupID = Math.floor(Date.now() / 100000);
+			const backupID = Math.floor(Date.now() / 100000);
 			if (existsSync(`./data/backups/db_${backupID}.sqlite`) || error) return;
 			writeFile(`./data/backups/db_${backupID}.sqlite`, data.toString(), (error) => {
 				if (error) console.log(error);

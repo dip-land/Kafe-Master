@@ -1,5 +1,5 @@
 import type { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message, PermissionResolvable } from 'discord.js';
-import { Command } from '../structures/command.js';
+import type { Command } from '../structures/command.js';
 declare module 'discord.js' {
 	interface Client {
 		cooldowns: Collection<string, any>;

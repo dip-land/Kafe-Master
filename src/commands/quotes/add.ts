@@ -28,8 +28,8 @@ export default new Command({
 	cooldown: 10,
 	async slashCommand(interaction, options) {
 		try {
-			let keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
-			let text = options.find((option) => option.name === 'text')?.value;
+			const keyword = `${options.find((option) => option.name === 'keyword')?.value}`.toLowerCase();
+			const text = options.find((option) => option.name === 'text')?.value;
 			new Quote({ keyword: keyword, text: text, createdBy: interaction.user.id }).save().then((q) => {
 				interaction.editReply(`Quote #${q.id} cweated :3`);
 			});
@@ -39,7 +39,7 @@ export default new Command({
 	},
 	async prefixCommand(message, args) {
 		if (!args[0]) return message.reply('Nyu keyword or text provided miyaaaa~!');
-		let keyword = args.shift();
+		const keyword = args.shift();
 		if (!args[0]) return message.reply('Nyow add the text desu~!');
 		new Quote({ keyword: keyword?.toLowerCase(), text: args.join(' '), createdBy: message.author.id }).save().then((q) => {
 			message.reply(`Quote #${q.id} cweated :3`);
