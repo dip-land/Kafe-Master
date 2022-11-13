@@ -22,16 +22,16 @@ export default new Command({
 	cooldown: 10,
 	async slashCommand(interaction, options) {
 		try {
-			let id = options.find((option) => option.name === 'id')?.value as string;
-			let quote = await Quote.findOne({ where: { id } });
+			const id = options.find((option) => option.name === 'id')?.value as string;
+			const quote = await Quote.findOne({ where: { id } });
 			if (!quote) return interaction.editReply(`The quote #${id} jar is empty :3`);
-			let createdBy = await interaction.client.users.fetch(quote.createdBy);
+			const createdBy = await interaction.client.users.fetch(quote.createdBy);
 			if (!interaction.memberPermissions?.has('Administrator')) if (interaction.user.id !== createdBy.id) return;
 			interaction.editReply({
 				embeds: [
 					{
 						color: 0xfab6ec,
-						title: `Do you wanna compost this quote, myaa?`,
+						title: 'Do you wanna compost this quote, myaa?',
 						description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
 							quote.createdAt.getTime() / 1000
 						)}:F>\n`,
@@ -68,17 +68,17 @@ export default new Command({
 	},
 	async prefixCommand(message, args) {
 		if (!args[0]) return message.reply('No ID was provided.');
-		let id = parseInt(args[0]);
+		const id = parseInt(args[0]);
 		if (!id) return;
-		let quote = await Quote.findOne({ where: { id } });
+		const quote = await Quote.findOne({ where: { id } });
 		if (!quote) return message.reply(`The quote #${id} jar is empty :3`);
-		let createdBy = await message.client.users.fetch(quote.createdBy);
+		const createdBy = await message.client.users.fetch(quote.createdBy);
 		if (!message.member?.permissions.has('Administrator')) if (message.author.id !== createdBy.id) return;
 		message.reply({
 			embeds: [
 				{
 					color: 0xfab6ec,
-					title: `Do you wanna compost this quote, myaa?`,
+					title: 'Do you wanna compost this quote, myaa?',
 					description: `**ID:** ${quote.id}\n**Keyword:** ${quote.keyword}\n**Text:** ${quote.text}\n**Created By:** ${createdBy.tag} (${createdBy.id})\n**Created At:** <t:${Math.floor(
 						quote.createdAt.getTime() / 1000
 					)}:F>\n`,
@@ -111,12 +111,12 @@ export default new Command({
 		});
 	},
 	async button(interaction, message, args) {
-		let quote = await Quote.findOne({ where: { id: args[3] } });
-		quote?.destroy().then(async (q) => {
-			interaction.deleteReply().catch((e) => {});
-			interaction.reply({ content: 'Quote deleted.', ephemeral: true }).catch((e) => {});
-			interaction.message.delete().catch((e) => {});
-			message?.delete().catch((e) => {});
+		const quote = await Quote.findOne({ where: { id: args[3] } });
+		quote?.destroy().then(async () => {
+			interaction.deleteReply().catch();
+			interaction.reply({ content: 'Quote deleted.', ephemeral: true }).catch();
+			interaction.message.delete().catch();
+			message?.delete().catch();
 		});
 	},
 });

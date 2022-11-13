@@ -52,7 +52,7 @@ export default new Command({
 					name: 'hide',
 					description: 'Hide the response',
 				},
-			]
+			],
 		},
 	],
 	aliases: [],
@@ -69,8 +69,8 @@ export default new Command({
 			(await Config.findOne({ where: { type: 'prefix', data: subSubOptions[0].value } }))?.destroy();
 			interaction.editReply(`Prefix \`${subSubOptions[0].value}\` has been removed.`);
 		} else if (subOptions.name === 'view') {
-			let prefixData: Array<Config> = await Config.findAll({ where: { type: 'prefix' } });
-			let prefixes: Array<string> = [];
+			const prefixData: Array<Config> = await Config.findAll({ where: { type: 'prefix' } });
+			const prefixes: Array<string> = [];
 			for (const prefix of prefixData) {
 				prefixes.push(prefix.data);
 			}

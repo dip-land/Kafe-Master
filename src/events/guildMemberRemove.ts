@@ -1,4 +1,4 @@
-import { GuildMember } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import { client } from '../index.js';
 
 export const name = 'guildMemberRemove';

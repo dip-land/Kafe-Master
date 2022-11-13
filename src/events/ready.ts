@@ -1,4 +1,4 @@
-import { Client, Routes } from 'discord.js';
+import { type Client, Routes } from 'discord.js';
 import { check } from '../handlers/database/index.js';
 import { beta, commands } from '../index.js';
 
