@@ -12,42 +12,42 @@ const register = new Registry();
 export const start = async () => {
 	if (beta) return;
 	const wsPing = new promClient.Gauge({
-		name: 'beta_ws_ping',
+		name: 'ws_ping',
 		help: 'ws ping',
 		async collect() {
 			this.set(client.ws.ping);
 		},
 	});
 	const users = new promClient.Gauge({
-		name: 'beta_users',
+		name: 'users',
 		help: 'number of users',
 		async collect() {
 			this.set((await client.guilds.fetch('981639333549322262')).memberCount);
 		},
 	});
 	const dbConfigs = new promClient.Gauge({
-		name: 'beta_db_configs',
+		name: 'db_configs',
 		help: 'number of configs',
 		async collect() {
 			this.set((await Config.findAll()).length);
 		},
 	});
 	const dbQuotes = new promClient.Gauge({
-		name: 'beta_db_quotes',
+		name: 'db_quotes',
 		help: 'number of quotes',
 		async collect() {
 			this.set((await Quote.findAll()).length);
 		},
 	});
 	const dbUsers = new promClient.Gauge({
-		name: 'beta_db_users',
+		name: 'db_users',
 		help: 'number of users',
 		async collect() {
 			this.set((await User.findAll()).length);
 		},
 	});
 	const dbSongQueue = new promClient.Gauge({
-		name: 'beta_db_songs',
+		name: 'db_songs',
 		help: 'number of songs in queue',
 		async collect() {
 			this.set((await Queue.findAll()).length);
