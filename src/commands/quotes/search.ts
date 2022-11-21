@@ -116,11 +116,11 @@ async function makeEmbed(quote: Quote, user: User, client: Client): Promise<APIE
 	let image: APIEmbedImage | undefined;
 	for (const content of contents) {
 		if (content.startsWith('https://tenor.com/view/')) {
-			const gif = (await fetch(`${content}.gif`, { redirect: 'follow' }).catch()) as Response;
+			const gif = (await fetch(`${content}.gif`, { redirect: 'follow' }).catch((e) => {})) as Response;
 			image = { url: gif.url };
 			break;
 		} else {
-			const data = await fetch(content, { method: 'HEAD' }).catch();
+			const data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 			if (data) {
 				const type = data.headers.get('content-type');
 				if (type?.match(/video\/|image\/|webm/g)) {

@@ -58,7 +58,7 @@ Quote.init(
 );
 Quote.afterCreate('s', async (quote) => {
 	const channelID = beta ? '1002785897005199480' : '1004144428019097600';
-	const channel = await client.channels.fetch(channelID).catch();
+	const channel = await client.channels.fetch(channelID).catch((e) => {});
 	const createdBy = await client.users.fetch(quote.createdBy);
 	if (channel && channel?.isTextBased()) {
 		channel.send({
@@ -68,7 +68,7 @@ Quote.afterCreate('s', async (quote) => {
 });
 Quote.afterDestroy('s', async (quote) => {
 	const channelID = beta ? '1002785897005199480' : '1004144428019097600';
-	const channel = await client.channels.fetch(channelID).catch();
+	const channel = await client.channels.fetch(channelID).catch((e) => {});
 	const createdBy = await client.users.fetch(quote.createdBy);
 	if (channel && channel?.isTextBased()) {
 		channel.send({

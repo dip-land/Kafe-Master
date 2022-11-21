@@ -61,7 +61,7 @@ export default async (message: Message<boolean>) => {
 			if (allowedURLS.includes(content)) checks.push(1);
 			else {
 				//Fetch the content and checks if it is a video, image or webm
-				const data = await fetch(content, { method: 'HEAD' }).catch();
+				const data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 				if (data) {
 					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\/|webm/g)) checks.push(1);
@@ -89,7 +89,7 @@ function finish(message: Message<boolean>, emojis: Array<string>, counter: Count
 
 	//React with emojis if there are any
 	for (const emoji of emojis) {
-		message.react(emoji).catch();
+		message.react(emoji).catch((e) => {});
 	}
 }
 

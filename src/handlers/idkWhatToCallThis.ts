@@ -38,7 +38,7 @@ export default async (message: Message<boolean>) => {
 			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://twitter.com/')) {
 				checks.push(1);
 			} else if (content.startsWith('http')) {
-				const data = await fetch(content, { method: 'HEAD' }).catch();
+				const data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 				if (data) {
 					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\//g)) checks.push(1);
