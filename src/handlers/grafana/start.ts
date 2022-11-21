@@ -71,7 +71,7 @@ export const start = async () => {
 			res.end(await register.metrics());
 		} catch (err) {
 			console.log(err);
-			res.status(500).end(err);
+			res.status(500).end('An error has occured');
 		}
 	});
 
