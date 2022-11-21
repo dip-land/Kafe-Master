@@ -113,10 +113,10 @@ export default new Command({
 	async button(interaction, message, args) {
 		const quote = await Quote.findOne({ where: { id: args[3] } });
 		quote?.destroy().then(async () => {
-			interaction.deleteReply().catch();
-			interaction.reply({ content: 'Quote deleted.', ephemeral: true }).catch();
-			interaction.message.delete().catch();
-			message?.delete().catch();
+			interaction.deleteReply().catch((e) => {});
+			interaction.reply({ content: 'Quote deleted.', ephemeral: true }).catch((e) => {});
+			interaction.message.delete().catch((e) => {});
+			message?.delete().catch((e) => {});
 		});
 	},
 });

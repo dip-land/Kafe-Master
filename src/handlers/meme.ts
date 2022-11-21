@@ -30,7 +30,7 @@ export default async (message: Message<boolean>, channel: Channel) => {
 			) {
 				checks.push(1);
 			} else {
-				const data = await fetch(content, { method: 'HEAD' }).catch();
+				const data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
 				if (data) {
 					const type = data.headers.get('content-type');
 					if (type?.match(/video\/|image\/|webm/g)) checks.push(1);
