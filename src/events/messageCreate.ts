@@ -1,6 +1,6 @@
 import type { Message } from 'discord.js';
 import prefixCommand from '../handlers/prefixCommand.js';
-import { beta } from '../index.js';
+import { beta } from '../handlers/bot.js';
 import Config from '../structures/database/config.js';
 import channelManager from '../handlers/channelManagerV2.js';
 import memeHandler from '../handlers/meme.js';

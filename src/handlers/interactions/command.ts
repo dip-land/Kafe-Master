@@ -12,9 +12,8 @@ export default async (interaction: CommandInteraction) => {
 				if (interaction.memberPermissions && interaction.memberPermissions.has(permission)) return interaction.editReply('You seem to be missing permissions to use this command.');
 			}
 		}
+		if (command.commandObject?.disabled) return interaction.editReply('This command is currently disabled.');
 	}
-
-	if (command.commandObject?.disabled) return interaction.editReply('This command is currently disabled.');
 
 	try {
 		command.slashCommand(interaction, interaction.options.data);

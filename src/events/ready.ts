@@ -1,7 +1,7 @@
 import { type Client, Routes } from 'discord.js';
 import { start } from '../handlers/grafana/start.js';
 import { check } from '../handlers/database/index.js';
-import { beta, commands } from '../index.js';
+import { beta, commands } from '../handlers/bot.js';
 
 export const name = 'ready';
 export const once = true;
