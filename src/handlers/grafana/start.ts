@@ -4,7 +4,7 @@ import Config from '../../structures/database/config.js';
 import Queue from '../../structures/database/queue.js';
 import Quote from '../../structures/database/quote.js';
 import User from '../../structures/database/user.js';
-import { beta, client } from '../../index.js';
+import { beta, client } from '../bot.js';
 
 const Registry = promClient.Registry;
 const register = new Registry();
@@ -65,7 +65,7 @@ export const start = async () => {
 
 	const app = express();
 
-	app.get('/metrics', async (_req: any, res: any) => {
+	app.get('/metrics', async (req, res) => {
 		try {
 			res.set('Content-Type', register.contentType);
 			res.end(await register.metrics());
