@@ -50,6 +50,21 @@ export default async (message: Message<boolean>) => {
 		else {
 			counter.count++;
 			counter.save();
+			if (message.channelId === '690972955080917085' && counter.count >= 8) {
+				message.channel.send("❕>w< w-where's the cute~?? Post more cute~!").then((msg) => {
+					setTimeout(() => {
+						msg.delete().catch(() =>
+							setTimeout(() => {
+								msg.delete().catch(() =>
+									setTimeout(() => {
+										msg.delete().catch((e) => console.log(e));
+									}, 60000 * 2)
+								);
+							}, 60000)
+						);
+					}, 30000);
+				});
+			}
 			if (counter.count >= maxMessagesBeforeTrigger) {
 				const sendMessage = massageParlor ? "❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!" : "❕>w< w-where's the cute~?? Post more cute~!";
 				message.channel.send(sendMessage).then((msg) => {
@@ -76,5 +91,5 @@ function finish(message: Message<boolean>, massageParlor: boolean, counter: Coun
 	counter.count = 0;
 	counter.save();
 	const emoji = massageParlor ? '<:lewdheart:1001948634859974746>' : '<a:akafeheart:1009602965616726026>';
-	message.react(emoji).catch((e: Error) => console.log('error reacting to message:', e.message));
+	message.react(emoji).catch((e: Error) => console.log('error reacting to a message'));
 }

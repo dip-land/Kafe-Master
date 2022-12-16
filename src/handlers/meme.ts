@@ -49,7 +49,7 @@ function finish(message: Message<boolean>) {
 			? ['<:a_:996202740202090557>', '<:b_:996202722699264000>']
 			: ['<a:akafeheart:1009602965616726026>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'];
 	for (const emoji of emojis) {
-		message.react(emoji).catch((e) => console.log('error reacting to message:', e));
+		message.react(emoji).catch((e) => console.log('error reacting to a message'));
 	}
 }
 
@@ -61,7 +61,6 @@ function deleteMessage(message: Message<boolean>, channel: Channel, minutes: num
 			channel.send(messages[Math.floor(Math.random() * messages.length)]).then((deleteMessage: Message<boolean>) => {
 				setTimeout(() => {
 					deleteMessage.delete().catch((e) => {
-						console.log('error deleting delete message:', e);
 						setTimeout(() => {
 							deleteMessage.delete().catch((e) => {
 								console.log('error deleting delete message:', e);
@@ -72,7 +71,6 @@ function deleteMessage(message: Message<boolean>, channel: Channel, minutes: num
 			});
 		})
 		.catch((e) => {
-			console.log('error deleting message:', e);
 			setTimeout(() => {
 				message.delete().catch((e) => {
 					console.log('error deleting message:', e);
