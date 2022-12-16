@@ -1,4 +1,4 @@
-import type { ButtonInteraction, CacheType, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption, Message, PermissionResolvable, SelectMenuInteraction } from 'discord.js';
+import type { ButtonInteraction, CacheType, ChatInputApplicationCommandData, CommandInteraction, CommandInteractionOption, Message, PermissionResolvable, AnySelectMenuInteraction } from 'discord.js';
 
 export class Command {
 	#name = '';
@@ -12,7 +12,7 @@ export class Command {
 	#prefixCommand?: (message: Message, args: Array<string>) => Promise<unknown>;
 	#slashCommand?: (interaction: CommandInteraction, options: readonly CommandInteractionOption<CacheType>[]) => Promise<unknown>;
 	#button?: (interaction: ButtonInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
-	#selectMenu?: (interaction: SelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
+	#selectMenu?: (interaction: AnySelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
 	constructor(options: CommandOptions) {
 		this.#name = options.name;
 		this.#description = options.description;
@@ -62,8 +62,8 @@ export class Command {
 	public get button(): (interaction: ButtonInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown> {
 		return this.#button as (interaction: ButtonInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
 	}
-	public get selectMenu(): (interaction: SelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown> {
-		return this.#selectMenu as (interaction: SelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
+	public get selectMenu(): (interaction: AnySelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown> {
+		return this.#selectMenu as (interaction: AnySelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
 	}
 }
 
@@ -79,7 +79,7 @@ export class CommandOptions {
 	prefixCommand?: (message: Message, args: Array<string>) => Promise<unknown>;
 	slashCommand?: (interaction: CommandInteraction, options: readonly CommandInteractionOption<CacheType>[]) => Promise<unknown>;
 	button?: (interaction: ButtonInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
-	selectMenu?: (interaction: SelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
+	selectMenu?: (interaction: AnySelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
 }
 
 export class ApplicationData {
@@ -100,5 +100,5 @@ export class CommandObject {
 	prefixCommand?: (message: Message, args: Array<string>) => Promise<unknown>;
 	slashCommand?: (interaction: CommandInteraction, options: readonly CommandInteractionOption<CacheType>[]) => Promise<unknown>;
 	button?: (interaction: ButtonInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
-	selectMenu?: (interaction: SelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
+	selectMenu?: (interaction: AnySelectMenuInteraction, message: undefined | Message, args: Array<string>) => Promise<unknown>;
 }

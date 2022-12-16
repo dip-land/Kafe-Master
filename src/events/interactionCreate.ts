@@ -11,5 +11,5 @@ export default (interaction: Interaction) => {
 	if (interaction.isButton()) return button(interaction);
 	if (interaction.isChatInputCommand()) return command(interaction);
 	//if (interaction.isModalSubmit()) return modal(interaction);
-	if (interaction.isSelectMenu()) return selectMenu(interaction);
+	if (interaction.isAnySelectMenu()) return selectMenu(interaction);
 };

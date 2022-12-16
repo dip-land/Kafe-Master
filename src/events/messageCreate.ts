@@ -1,6 +1,6 @@
 import type { Message } from 'discord.js';
 import prefixCommand from '../handlers/prefixCommand.js';
-import { beta } from '../handlers/bot.js';
+import { beta } from '../index.js';
 import Config from '../structures/database/config.js';
 import channelManager from '../handlers/channelManagerV2.js';
 import memeHandler from '../handlers/meme.js';
@@ -11,6 +11,7 @@ export const once = false;
 export default async (message: Message<boolean>) => {
 	if (message.author.bot) return;
 	if (message.member?.displayName.toLowerCase().includes('mouse') && Math.ceil(Math.random() * 49) === 42) message.channel.send('🧀');
+	if (message.content.includes('stfu')) message.channel.send('slice the fudge, uwuu~ <3');
 	if (beta) channelManager(message);
 	memeHandler(message, message.channel);
 	idkWhatToCallThisHandler(message);

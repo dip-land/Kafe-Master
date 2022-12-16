@@ -1,7 +1,7 @@
-import type { SelectMenuInteraction } from 'discord.js';
+import type { AnySelectMenuInteraction } from 'discord.js';
 import type { Command } from '../../structures/command.js';
 
-export default async (interaction: SelectMenuInteraction) => {
+export default async (interaction: AnySelectMenuInteraction) => {
 	const args = interaction.customId.split('_');
 	const commandName = args[0];
 	const command = interaction.client.legacyCommands.get(commandName) as Command;
