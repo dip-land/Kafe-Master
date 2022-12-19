@@ -1,29 +1,35 @@
 import type { Message } from 'discord.js';
 import Counter from '../structures/database//counter.js';
 
-export type Channels = [{ channel: string; emojis: Array<string>; msg: string; t: number }];
+export type Channels = [{ channel: string; emojis: Array<string>; msgs: Array<string>; t: number; d: boolean }];
 
 const channels = [
-	{ channel: '690972955080917085', emojis: ['<a:akafeheart:1009602965616726026>'], msg: "❕>w< w-where's the cute~?? Post more cute~!", t: 8 }, //tearoom
-	{ channel: '1054475329776926830', emojis: ['💕'], msg: "❕>w< w-where's the cute~?? Post more cute~!", t: 10 }, //extra-cute
-	{ channel: '1054471487119179886', emojis: ['💖'], msg: "❕>w< w-where's the cute~?? Post more cute~!", t: 10 }, //super-cute
-	{ channel: '995368611822706708', emojis: ['💖'], msg: '>:(', t: 3 }, //msgblocktest
+	{ channel: '690972955080917085', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 8, d: false }, //KK_tea-room
+	{ channel: '1054475329776926830', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 10, d: false }, //KK_extra-cute
+	{ channel: '1054471487119179886', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 10, d: false }, //KK_super-cute
+	{ channel: '995368611822706708', emojis: ['💖'], msgs: ['>:('], t: 0, d: true }, //SB_msgblocktest
+	{
+		channel: '960560813637255189',
+		emojis: ['<a:akafeheart:1009602965616726026>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'],
+		msgs: ['Nyuuu~ no tyext in the meme channel~! >w<', 'Bakaa customer~, read the channel descwiption~! >w>', 'Nyaaa~! Memes only means memes onlyy~ >w>'],
+		t: 0,
+		d: true,
+	}, //KK_memes-only
+	{
+		channel: '1054430036146528290',
+		emojis: ['<a:akafeheart:1009602965616726026>', '<:cocsmile:960630832219971624>', '<:chopain:960614470940504075>', '<:cindizzy:960630695464669214>', '<:mapmad:960614761349935134>'],
+		msgs: ['Nyuuu~ no tyext in the meme channel~! >w<', 'Bakaa customer~, read the channel descwiption~! >w>', 'Nyaaa~! Memes only means memes onlyy~ >w>'],
+		t: 0,
+		d: true,
+	}, //NN_memes-only
+	{ channel: '1054504499043123240', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_meow-chat
+	{ channel: '1054540453061611532', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_vanilla
+	{ channel: '1054540472611246131', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_chocola
+	{ channel: '1054533703004594257', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_azuki
+	{ channel: '1054533717013577769', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_coconut
+	{ channel: '1054533728598245426', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_maple
+	{ channel: '1054533742070333501', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_cinnamon
 ];
-
-//my testing channel, tearoom, and all the channels in massage parlor except basement
-// const channels: Array<string> = [
-// 	'1002426028532174959',
-// 	'690972955080917085',
-// 	'973421960790954024',
-// 	'632719361190395925',
-// 	'870772556343443556',
-// 	'817153208807981056',
-// 	'821055344566468689',
-// 	'819703387351285790',
-// 	'861372174664073226',
-// 	'821061080621121596',
-// 	'1054475329776926830',
-// ];
 
 export default async (message: Message<boolean>) => {
 	const channel = channels.find(({ channel }) => channel === message.channelId);
@@ -41,7 +47,13 @@ export default async (message: Message<boolean>) => {
 		const contents = message.content.split(' ');
 		const checks: Array<number> = [];
 		for (const content of contents) {
-			if (content.startsWith('https://tenor.com/view/') || content.match(/^(https?:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g) || content.startsWith('https://twitter.com/')) {
+			if (
+				content.startsWith('https://tenor.com/view/') ||
+				content.startsWith('https://www.reddit.com/') ||
+				content.startsWith('https://twitter.com/') ||
+				content.startsWith('https://vxtwitter.com/') ||
+				content.match(/^(https?:\/\/)?((www\.)?youtube\.com|youtu\.be)\/.+$/g)
+			) {
 				checks.push(1);
 			} else if (content.startsWith('http')) {
 				const data = await fetch(content, { method: 'HEAD' }).catch((e) => {});
@@ -57,7 +69,7 @@ export default async (message: Message<boolean>) => {
 			counter.count++;
 			counter.save();
 			if (counter.count >= channel.t) {
-				message.channel.send(channel.msg).then((msg) => {
+				message.channel.send(channel.msgs[Math.floor(Math.random() * channel.msgs.length)]).then((msg) => {
 					setTimeout(() => {
 						msg.delete().catch(() =>
 							setTimeout(() => {
@@ -70,6 +82,15 @@ export default async (message: Message<boolean>) => {
 						);
 					}, 30000);
 				});
+				if (channel.d && message.deletable) {
+					message.delete().catch((e) => {
+						setTimeout(() => {
+							message.delete().catch((e) => {
+								console.log('error deleting message:', e);
+							});
+						}, 10000);
+					});
+				}
 			}
 		}
 	}
