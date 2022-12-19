@@ -1,4 +1,4 @@
-import type { CacheType, ChatInputApplicationCommandData, Client, Collection, CommandInteraction, CommandInteractionOption, Message, PermissionResolvable } from 'discord.js';
+import type { Collection, PermissionResolvable } from 'discord.js';
 import type { Command } from '../structures/command.js';
 declare module 'discord.js' {
 	interface Client {
@@ -17,19 +17,6 @@ export type CommandFileExtendedData = {
 	cooldown?: number;
 	disabled?: boolean;
 	permissions?: Array<PermissionResolvable>;
-};
-
-export type CommandFile = {
-	data: ChatInputApplicationCommandData;
-	extendedData: CommandFileExtendedData;
-	default: (interaction: CommandInteraction, options: readonly CommandInteractionOption<CacheType>[]) => void;
-	legacy: (message: Message, args: Array<string>, client?: Client) => void;
-};
-
-export type EventFile = {
-	name: string;
-	once: boolean;
-	default: (...args: Array<any>) => void;
 };
 
 export type channelConfigData = {
