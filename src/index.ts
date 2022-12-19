@@ -3,7 +3,7 @@ import { Client, Collection } from 'discord.js';
 import 'dotenv/config';
 import { exec } from 'child_process';
 import { platform } from 'os';
-export const beta = false; //platform() === 'win32';
+export const beta = platform() === 'win32';
 export const token = beta ? (process.env.BETATOKEN as string) : (process.env.TOKEN as string);
 
 import glob from 'glob';
@@ -49,10 +49,13 @@ glob('./dist/commands/**/*.js', async (err: Error | null, paths: Array<string>) 
 
 client.login(token);
 
+let missedCheckIns = 0;
 setInterval(() => {
 	exec('ping -c 1 8.8.8.8', (e, stdout, stderr) => {
-		console.log(e);
-		if (e !== null) console.log('Not available');
-		else console.log('Available');
+		if (e !== null) missedCheckIns++;
+		if (missedCheckIns > 100) {
+			console.log('Too many check-ins missed, restarting...');
+			process.kill(0);
+		}
 	});
-}, 1000);
+}, 5000);
