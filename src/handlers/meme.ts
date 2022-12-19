@@ -10,7 +10,6 @@ export default async (message: Message<boolean>, channel: Channel) => {
 	if (message.attachments.size > 0) {
 		const checks: Array<number> = [];
 		for (const [s, attachment] of message.attachments) {
-			if (s) null;
 			if (attachment.contentType?.match(/video\/|image\//g)) checks.push(1);
 			else checks.push(0);
 		}

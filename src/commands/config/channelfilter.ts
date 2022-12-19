@@ -4,12 +4,12 @@ import type { channelConfigData } from 'src/types/index.js';
 import Config from '../../structures/database/config.js';
 
 export default new Command({
-	name: 'channel',
-	description: 'Add, Remove, Update or View channel configs',
+	name: 'channelfilter',
+	description: 'Add, Remove, Update or View channel filter configs',
 	options: [
 		{
 			name: 'add',
-			description: 'Add a channel config',
+			description: 'Add a channel filter config',
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
@@ -125,7 +125,7 @@ export default new Command({
 		},
 		{
 			name: 'remove',
-			description: 'Remove a channel config',
+			description: 'Remove a channel filter',
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
@@ -143,7 +143,7 @@ export default new Command({
 		},
 		{
 			name: 'view',
-			description: 'View a list of all channels that have configs',
+			description: 'View a list of all channels that have filters',
 			type: ApplicationCommandOptionType.Subcommand,
 			options: [
 				{
@@ -159,7 +159,7 @@ export default new Command({
 			],
 		},
 	],
-	aliases: [],
+	aliases: ['cf'],
 	category: 'config',
 	permissions: ['Administrator'],
 	disabled: true,
@@ -216,8 +216,8 @@ export default new Command({
 				for (const config of configs) {
 					if (config.type.includes('channel')) channels.push(`${config.type.replace('channel_', '<#')}>`);
 				}
-				if (!channels[0]) interaction.editReply('No Channel configs exist.');
-				else interaction.editReply(`Here are all the channels that have configs ${channels.join(' ')}`);
+				if (!channels[0]) interaction.editReply('No Channel filter configs exist.');
+				else interaction.editReply(`Here are all the channels that have filters ${channels.join(' ')}`);
 			} else {
 				const channelConfig = (await Config.findOne({ where: { type: `channel_${channel}` } })) as Config;
 				if (!channelConfig?.type) return interaction.editReply('The specified channel does not have a config.');
