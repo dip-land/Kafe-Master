@@ -3,7 +3,6 @@ import prefixCommand from '../handlers/prefixCommand.js';
 import { beta } from '../index.js';
 import Config from '../structures/database/config.js';
 import channelManager from '../handlers/channelManagerV2.js';
-import memeHandler from '../handlers/meme.js';
 import idkWhatToCallThisHandler from '../handlers/idkWhatToCallThis.js';
 import { Event } from '../structures/event.js';
 
@@ -15,7 +14,6 @@ export default new Event({
 		if (message.member?.displayName.toLowerCase().includes('mouse') && Math.ceil(Math.random() * 49) === 42) message.channel.send('🧀');
 		if (message.content.toLowerCase().includes('stfu')) message.channel.send('slice the fudge, uwuu~ <3');
 		if (beta) channelManager(message);
-		memeHandler(message, message.channel);
 		idkWhatToCallThisHandler(message);
 
 		const prefixes = beta ? [] : ['.', '<@995370187626905611>'];
