@@ -1,12 +1,11 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { beta } from '../../index.js';
+import { beta, client } from '../../index.js';
 import { startBackups } from './backup.js';
 import Config from '../../structures/database/config.js';
 import Counter from '../../structures/database/counter.js';
 import Queue from '../../structures/database/queue.js';
 import Quote from '../../structures/database/quote.js';
 import User from '../../structures/database/user.js';
-import { client } from '../bot.js';
 
 export const sequelize = new Sequelize({
 	dialect: 'sqlite',
