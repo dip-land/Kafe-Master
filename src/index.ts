@@ -48,14 +48,15 @@ glob('./dist/commands/**/*.js', async (err: Error | null, paths: Array<string>) 
 });
 
 client.login(token);
-
-let missedCheckIns = 0;
-setInterval(() => {
-	exec('ping -c 1 8.8.8.8', (e, stdout, stderr) => {
-		if (e !== null) missedCheckIns++;
-		if (missedCheckIns > 100) {
-			console.log('Too many check-ins missed, restarting...');
-			process.kill(0);
-		}
-	});
-}, 5000);
+if (!beta) {
+	let missedCheckIns = 0;
+	setInterval(() => {
+		exec('ping -c 1 8.8.8.8', (e, stdout, stderr) => {
+			if (e !== null) missedCheckIns++;
+			if (missedCheckIns > 100) {
+				console.log('Too many check-ins missed, restarting...');
+				process.kill(0);
+			}
+		});
+	}, 5000);
+}
