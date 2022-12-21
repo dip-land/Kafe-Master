@@ -1,9 +1,9 @@
 import type { Message } from 'discord.js';
 import Counter from '../structures/database//counter.js';
 
-export type Channels = [{ channel: string; emojis: Array<string>; msgs: Array<string>; t: number; d: boolean }];
+export type Channels = Array<{ channel: string; emojis: Array<string>; msgs: Array<string>; t: number; d: boolean }>;
 
-const channels = [
+const channels: Channels = [
 	{ channel: '690972955080917085', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 8, d: false }, //KK_tea-room
 	{ channel: '1054475329776926830', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 10, d: false }, //KK_extra-cute
 	{ channel: '1054471487119179886', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕>w< w-where's the cute~?? Post more cute~!"], t: 10, d: false }, //KK_super-cute
@@ -29,6 +29,15 @@ const channels = [
 	{ channel: '1054533717013577769', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_coconut
 	{ channel: '1054533728598245426', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_maple
 	{ channel: '1054533742070333501', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ['>'], t: 999999999, d: false }, //NN_cinnamon
+	{ channel: '1054430038721839220', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_ecchi
+	{ channel: '1054430039233536071', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_love-hotel
+	{ channel: '1054430039233536072', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_love-hotel-3d
+	{ channel: '1054585186332975114', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_femdom
+	{ channel: '1054430039233536074', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_giantess
+	{ channel: '1054430039233536073', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_futa
+	{ channel: '1054585693906677840', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_trap
+	{ channel: '1054586516053168159', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_furry
+	{ channel: '1054430039233536077', emojis: ['<a:akafeheart:1009602965616726026>'], msgs: ["❕l-lewds.. w-where's the lewds >W> haahh, haaah~ ahhnn, post more lewds~!!"], t: 10, d: false }, //NN_greyment
 ];
 
 export default async (message: Message<boolean>) => {
