@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { exec } from 'child_process';
 import { platform } from 'os';
 export const beta = platform() === 'win32';
-export const token = beta ? (process.env.BETATOKEN as string) : (process.env.TOKEN as string);
+export const token = beta ? (process.env.BETATOKEN as string) : (process.env.HMTOKEN as string);
 
 import glob from 'glob';
 import type { Command } from './structures/command.js';
@@ -53,10 +53,10 @@ if (!beta) {
 	setInterval(() => {
 		exec('ping -c 1 8.8.8.8', (e, stdout, stderr) => {
 			if (e !== null) missedCheckIns++;
-			if (missedCheckIns > 100) {
+			if (missedCheckIns > 20) {
 				console.log('Too many check-ins missed, restarting...');
 				process.kill(0);
 			}
 		});
-	}, 5000);
+	}, 1000);
 }

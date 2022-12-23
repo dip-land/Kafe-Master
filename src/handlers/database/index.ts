@@ -13,11 +13,17 @@ export const sequelize = new Sequelize({
 	storage: './data/db.sqlite',
 });
 
-export const check = () => {
-	sequelize.authenticate().then(() => {
-		console.log('Database online.');
-		startBackups().then(() => sequelize.sync());
-	});
+export const startDatabase = () => {
+	sequelize
+		.authenticate()
+		.then(() => {
+			console.log('Database online.');
+			Quote.sync({ alter: true });
+			startBackups().then(() => sequelize.sync());
+		})
+		.catch((e) => {
+			console.log('Database Error', e);
+		});
 };
 
 Config.init(
